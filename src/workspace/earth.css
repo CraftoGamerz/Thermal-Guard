@@ -1,0 +1,839 @@
+.earth-home {
+  background: #050b13;
+  color: #edf3f1;
+  min-height: 100vh;
+}
+.earth-home button,
+.earth-home a {
+  touch-action: manipulation;
+}
+.earth-header {
+  height: 88px;
+  max-width: 1440px;
+  margin: auto;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #253033;
+}
+.earth-brand {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 22px;
+  font-weight: 750;
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: -0.7px;
+}
+.earth-brand > span:first-child {
+  display: grid;
+  place-items: center;
+  background: #c5f277;
+  color: #102016;
+  width: 38px;
+  height: 40px;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+.earth-brand .light-name {
+  font-weight: 350;
+}
+.earth-header nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.earth-header nav a {
+  color: #9ba9ac;
+  text-decoration: none;
+  font-size: 13px;
+}
+.earth-header nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: 1px solid #35403f;
+  border-radius: 7px;
+  color: #edf3f1;
+  padding: 12px 17px;
+}
+.earth-hero {
+  position: relative;
+  isolation: isolate;
+  max-width: 1440px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: center;
+  padding: 18px 4% 35px 5%;
+  min-height: 680px;
+  overflow: hidden;
+}
+.earth-intro {
+  position: relative;
+  z-index: 1;
+  padding: 35px 0;
+  animation: earth-intro-arrive 850ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes earth-intro-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.earth-intro h1 {
+  font-size: clamp(42px, 4.7vw, 70px);
+  line-height: 1.08;
+  letter-spacing: -3px;
+  margin: 25px 0;
+}
+.earth-intro h1 em {
+  font-style: normal;
+  color: #c5f277;
+}
+.earth-intro > p {
+  color: #c1cdd3;
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 420px;
+}
+.earth-cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 29px;
+}
+.earth-cta button {
+  min-height: 46px;
+}
+.earth-data-note {
+  font-size: 11px;
+  color: #9ba9ac;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.earth-mini-flow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 45px;
+  color: #658082;
+  font-size: 10px;
+  font-family: "IBM Plex Mono", monospace;
+}
+.earth-mini-flow b {
+  display: block;
+  color: #c5d0ce;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.earth-mini-flow i {
+  height: 1px;
+  width: 36px;
+  background: #34433f;
+}
+.earth-visual {
+  min-width: 0;
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: -3%;
+}
+.earth-view-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1px;
+  color: #aec0bc;
+  padding: 10px 12px;
+}
+.earth-view-label span {
+  margin-left: auto;
+  font-size: 8px;
+  color: #758985;
+  letter-spacing: 0.4px;
+}
+.earth-stage {
+  position: relative;
+  height: 595px;
+  isolation: isolate;
+}
+.earth-stage:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at var(--earth-light-x, 75%) var(--earth-light-y, 22%),
+      #2469ac66,
+      transparent 55%
+    ),
+    radial-gradient(ellipse at 40% 60%, #1439673d, transparent 65%);
+  pointer-events: none;
+}
+.earth-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  outline-offset: -4px;
+  touch-action: none;
+}
+.earth-canvas:active {
+  cursor: grabbing;
+}
+.earth-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.earth-tools {
+  position: absolute;
+  right: 0;
+  top: 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.earth-tools button {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  color: #dce8e1;
+  border: 1px solid #33423f;
+  background: #10201fe6;
+  border-radius: 6px;
+}
+.earth-tools button:hover,
+.earth-tools button[aria-pressed="true"] {
+  background: #c5f277;
+  color: #142018;
+}
+.earth-credit {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: #7e9390;
+}
+.earth-status {
+  position: absolute;
+  bottom: 35px;
+  left: 12px;
+  right: 45px;
+  background: #14221ee8;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+.earth-coordinate {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 12px;
+  padding-top: 16px;
+  border-top: 1px solid #273632;
+  font-size: 11px;
+}
+.earth-coordinate > span {
+  font-size: 8px;
+  color: #839892;
+  letter-spacing: 1px;
+}
+.earth-coordinate strong {
+  font-weight: 500;
+}
+.earth-coordinate code {
+  margin-left: auto;
+  font-size: 9px;
+  color: #c5f277;
+}
+.pilot-section {
+  max-width: 1440px;
+  margin: auto;
+  padding: 35px 5% 48px;
+  border-top: 1px solid #253033;
+}
+.pilot-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  margin-bottom: 23px;
+}
+.pilot-heading h2 {
+  font-size: 26px;
+  letter-spacing: -1px;
+  margin: 10px 0 0;
+}
+.pilot-heading > span {
+  color: #d4dfd9;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  text-align: right;
+}
+.pilot-heading small {
+  display: block;
+  font:
+    10px "DM Sans",
+    sans-serif;
+  color: #889e95;
+  margin-top: 7px;
+}
+.district-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.district-card {
+  background: #101a1d;
+  border: 1px solid #2d393b;
+  border-radius: 8px;
+  text-align: left;
+  padding: 21px;
+  position: relative;
+  color: #e9f0ed;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+.district-card:hover {
+  transform: translateY(-3px);
+  border-color: #6a8676;
+}
+.district-card.active {
+  border-color: #b1d673;
+  background: #18231d;
+}
+.district-card > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #8fa5a0;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+}
+.district-card.active > div {
+  color: #c5f277;
+}
+.district-card h3 {
+  font-size: 22px;
+  margin: 24px 0 8px;
+  letter-spacing: -0.5px;
+}
+.district-card p {
+  margin: 0;
+  color: #a4b5ae;
+  font-size: 11px;
+}
+.district-arrow {
+  position: absolute;
+  right: 18px;
+  bottom: 20px;
+  color: #758b83;
+}
+.district-context {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 18px 21px;
+  background: #0f171a;
+  border-radius: 7px;
+  color: #a0b3ac;
+}
+.district-context > svg {
+  flex-shrink: 0;
+  color: #ff9559;
+}
+.district-context p {
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 850px;
+}
+.district-context p strong {
+  color: #dfebe4;
+}
+.district-context button {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: #c5f277;
+  font-size: 12px;
+}
+.approach-section {
+  max-width: 1440px;
+  margin: auto;
+  padding: 45px 5% 65px;
+  display: grid;
+  grid-template-columns: 32% 1fr;
+  gap: 45px;
+  border-top: 1px solid #253033;
+  scroll-margin-top: 20px;
+}
+.approach-section h2 {
+  font-size: 25px;
+  line-height: 1.35;
+  letter-spacing: -0.7px;
+  margin: 14px 0;
+}
+.approach-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+.approach-steps article {
+  border-top: 1px solid #42524b;
+  padding-top: 17px;
+}
+.approach-steps article > span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #c5f277;
+}
+.approach-steps h3 {
+  font-size: 14px;
+  margin: 20px 0 9px;
+}
+.approach-steps p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #8fa4a0;
+}
+.earth-footer {
+  padding: 23px 5%;
+  border-top: 1px solid #253033;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  font-size: 10px;
+  color: #8ca19c;
+}
+.earth-footer > span {
+  color: #d8e5dd;
+  white-space: nowrap;
+}
+.earth-footer p {
+  max-width: 640px;
+  line-height: 1.7;
+  margin: 0;
+}
+.earth-footer a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #b8c9c1;
+  white-space: nowrap;
+}
+.earth-loading {
+  min-height: 480px;
+  display: grid;
+  place-items: center;
+  color: #a2b5aa;
+  background: #0c1013;
+}
+.manager-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(440px, calc(100% - 32px));
+  padding: 32px;
+  background: #13201f;
+  color: #edf3f1;
+  border: 1px solid #3c5048;
+  border-radius: 15px;
+  box-shadow: 0 30px 100px #0009;
+  max-height: 90dvh;
+  overflow: auto;
+}
+.manager-dialog::backdrop {
+  background: #030809bb;
+  backdrop-filter: blur(8px);
+}
+.manager-close {
+  position: absolute;
+  right: 13px;
+  top: 13px;
+}
+.demo-badge {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #c5f277;
+  letter-spacing: 1px;
+}
+.manager-dialog h2 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  margin: 24px 0 12px;
+}
+.manager-dialog > p {
+  color: #acbcb4;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.manager-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin-top: 23px;
+}
+.manager-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: #d5e4dc;
+}
+.manager-dialog input,
+.manager-dialog select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  background: #0c1515;
+  border: 1px solid #3b5047;
+  color: #eff5ef;
+  min-height: 44px;
+}
+.manager-dialog small {
+  font-size: 11px;
+  color: #91a69c;
+  line-height: 1.6;
+}
+.manager-error {
+  color: #ffaca0;
+  font-size: 12px;
+  margin: 0;
+}
+.manager-dialog .primary {
+  justify-content: center;
+  min-height: 45px;
+}
+.manager-session {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid #455837;
+  border-radius: 8px;
+  padding: 13px 16px;
+  background: #1b251c;
+  margin-bottom: 20px;
+  color: #c5f277;
+}
+.manager-session strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.manager-session small {
+  display: block;
+  color: #a8b69e;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.manager-session button {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.earth-home :focus-visible {
+  outline: 2px solid #c5f277;
+  outline-offset: 4px;
+}
+@media (min-width: 701px) {
+  .earth-header {
+    position: relative;
+    z-index: 2;
+    border-bottom-color: #b4d8ff18;
+  }
+  .earth-hero {
+    display: flex;
+    min-height: clamp(690px, calc(100svh - 88px), 900px);
+    padding: 55px 5% 95px;
+    max-width: 1680px;
+  }
+  .earth-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      #050b13 0%,
+      #050b13e8 20%,
+      #050b1380 38%,
+      transparent 60%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .earth-intro {
+    width: 44%;
+    pointer-events: none;
+    text-shadow: 0 2px 25px #030912;
+  }
+  .earth-intro button,
+  .earth-intro a {
+    pointer-events: auto;
+  }
+  .earth-visual {
+    position: absolute;
+    inset: 0 -10% 0 22%;
+    margin: 0;
+    display: block;
+  }
+  .earth-visual .earth-stage {
+    height: 100%;
+  }
+  .earth-view-label {
+    position: absolute;
+    z-index: 1;
+    top: 22px;
+    left: 30%;
+    right: 16%;
+    pointer-events: none;
+  }
+  .earth-coordinate {
+    position: absolute;
+    bottom: 23px;
+    left: 31%;
+    right: 17%;
+    z-index: 1;
+    padding: 14px 0;
+    margin: 0;
+    background: #050b13b3;
+    pointer-events: none;
+  }
+  .earth-tools {
+    right: 16%;
+    z-index: 1;
+  }
+  .earth-credit {
+    left: 32%;
+    bottom: 8px;
+  }
+  .earth-status {
+    left: 32%;
+    right: 20%;
+    bottom: 85px;
+  }
+}
+@media (min-width: 1500px) {
+  .earth-stage {
+    height: 660px;
+  }
+}
+@media (max-width: 1000px) {
+  .earth-hero {
+    grid-template-columns: 42% 58%;
+    min-height: 620px;
+  }
+  .earth-stage {
+    height: 520px;
+  }
+  .earth-intro h1 {
+    font-size: 48px;
+    letter-spacing: -2px;
+  }
+  .earth-intro > p {
+    font-size: 14px;
+  }
+  .earth-coordinate {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .earth-coordinate code {
+    margin-left: 0;
+  }
+  .earth-view-label span {
+    display: none;
+  }
+  .district-card {
+    padding: 17px;
+  }
+  .district-card h3 {
+    font-size: 20px;
+  }
+  .district-arrow {
+    display: none;
+  }
+  .approach-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .earth-mini-flow {
+    margin-top: 28px;
+  }
+}
+@media (max-width: 700px) {
+  .earth-header {
+    height: 72px;
+    padding: 0 20px;
+  }
+  .earth-header nav a {
+    display: none;
+  }
+  .earth-header nav button {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .earth-brand {
+    font-size: 18px;
+  }
+  .earth-brand > span:first-child {
+    width: 30px;
+    height: 33px;
+  }
+  .earth-hero {
+    grid-template-columns: 1fr;
+    padding: 0 22px 26px;
+    min-height: auto;
+  }
+  .earth-intro {
+    padding: 35px 0 20px;
+  }
+  .earth-intro h1 {
+    font-size: 49px;
+    margin: 20px 0;
+  }
+  .earth-intro > p {
+    max-width: 520px;
+  }
+  .earth-mini-flow {
+    display: none;
+  }
+  .earth-stage {
+    height: 465px;
+  }
+  .earth-visual {
+    margin: 0 -12px;
+  }
+  .earth-tools {
+    right: 8px;
+  }
+  .earth-view-label span {
+    display: inline;
+    font-size: 7px;
+  }
+  .earth-coordinate {
+    font-size: 11px;
+  }
+  .earth-coordinate code {
+    margin-left: auto;
+  }
+  .pilot-section {
+    padding: 30px 22px;
+  }
+  .pilot-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pilot-heading > span {
+    text-align: left;
+  }
+  .pilot-heading h2 {
+    font-size: 25px;
+  }
+  .district-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .district-card h3 {
+    margin-top: 18px;
+  }
+  .district-context {
+    align-items: start;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+  .district-context p {
+    flex: 1;
+    min-width: 200px;
+  }
+  .district-context button {
+    margin-left: 34px;
+  }
+  .approach-section {
+    padding: 35px 22px;
+  }
+  .approach-steps {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .approach-steps h3 {
+    margin-top: 13px;
+  }
+  .approach-steps p {
+    margin-bottom: 0;
+  }
+  .earth-footer {
+    padding: 22px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .earth-footer p {
+    order: 3;
+    width: 100%;
+  }
+  .earth-footer a {
+    margin-left: auto;
+  }
+  .manager-session {
+    flex-wrap: wrap;
+  }
+  .manager-session small {
+    max-width: 220px;
+  }
+}
+@media (max-width: 380px) {
+  .earth-intro h1 {
+    font-size: 43px;
+  }
+  .earth-stage {
+    height: 395px;
+  }
+  .earth-coordinate code {
+    display: none;
+  }
+  .earth-view-label span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .earth-intro {
+    animation: none;
+  }
+  .district-card {
+    transition: none;
+  }
+  .district-card:hover {
+    transform: none;
+  }
+}

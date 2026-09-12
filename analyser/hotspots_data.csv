@@ -1,0 +1,21 @@
+id,district,state,class,lat,lng,frp,bright_ti4,bright_ti5,delta_t,robust_deviation,persistence_rate,days_seen_30d,days_seen_365d,built_up,tree_cover,cropland,wind_speed_ms,humidity_pct,temperature_c,detection_count,spatial_spread_km2,centroid_drift_rate,facility_overlap,median_frp,mad_frp
+HS-JAM-001,Jamnagar,Gujarat,Routine Gas Flare,22.4707,69.073,142.8,367.2,298.1,69.1,4.65,0.93,28,340,48,4,6,4.2,72,28.4,14,0.18,0,1,85.2,12.4
+HS-JAM-002,Jamnagar,Gujarat,Acute Industrial Fire,22.485,69.092,187.3,383.1,301.4,81.7,12.8,0.24,2,88,62,2,4,5.8,68,29.1,3,0.41,12,1,62.1,9.8
+HS-JAM-003,Jamnagar,Gujarat,Persistent Industrial Heat,22.458,69.055,78.4,341.8,296.2,45.6,0.52,0.98,30,358,70,3,2,3.1,74,27.8,28,0.12,0,0,74.2,8.1
+HS-JAM-004,Jamnagar,Gujarat,Routine Gas Flare,22.432,69.11,96.2,352.4,297.8,54.6,0.31,0.85,27,312,38,6,12,3.8,71,28.1,19,0.09,0,1,91.8,14.2
+HS-JAM-005,Jamnagar,Gujarat,Persistent Industrial Heat,22.51,69.04,64.7,338.1,294.9,43.2,0.74,0.77,25,280,55,5,8,2.9,65,31.2,22,0.14,0,1,59.4,7.2
+HS-JAM-006,Jamnagar,Gujarat,Uncertain / Other,22.445,68.98,28.3,318.6,295.2,23.4,0.74,0.28,8,102,22,12,22,6.2,80,27.4,2,0.82,48,0,22.1,8.4
+HS-AHM-001,Ahmedabad,Gujarat,Persistent Industrial Heat,23.0304,72.5802,67.0,346.5,298.2,48.3,2.00,0.88,26,325,76,4,8,3.2,68,29.2,3,0.18,0,1,52.0,7.5
+HS-AHM-002,Ahmedabad,Gujarat,Persistent Industrial Heat,23.0300,72.5800,41.0,341.2,298.0,43.2,0.50,0.90,28,340,74,4,8,3.2,68,29.2,3,0.14,0,1,52.0,7.5
+HS-LUD-001,Ludhiana,Punjab,Agricultural Burning,30.901,75.8573,22.4,326.4,296.8,29.6,3.46,0.17,6,62,4,2,84,2.1,58,24.8,4,1.24,62,0,8.2,4.1
+HS-LUD-002,Ludhiana,Punjab,Agricultural Burning,30.875,75.88,31.8,331.2,297.4,33.8,6.42,0.13,4,48,2,3,87,1.8,55,25.1,3,1.48,74,0,7.4,3.8
+HS-LUD-003,Ludhiana,Punjab,Persistent Industrial Heat,30.92,75.83,48.6,342.8,298.1,44.7,0.65,0.82,26,298,55,8,18,2.4,61,26.2,18,0.22,0,1,44.2,6.8
+HS-LUD-004,Ludhiana,Punjab,Agricultural Burning,30.852,75.81,15.9,322.1,295.8,26.3,2.85,0.11,3,42,3,5,79,1.6,60,24.5,2,0.88,55,0,6.8,3.2
+HS-DHN-001,Dhanbad,Jharkhand,Persistent Industrial Heat,23.78,86.42,94.6,351.6,298.5,53.1,2.05,0.86,27,330,45,6,6,3.6,76,27.6,3,0.22,0,1,72.0,11.0
+HS-MUM-001,Mumbai,Maharashtra,Persistent Industrial Heat,19.076,72.8777,58.4,344.2,298.4,45.8,0.44,0.94,29,342,72,6,4,3.4,82,27.2,24,0.16,0,1,54.8,8.2
+HS-MUM-002,Mumbai,Maharashtra,Wildfire / Natural Fire,19.214,72.91,72.1,356.8,299.2,57.6,6.88,0.19,5,68,8,72,2,5.2,78,26.8,6,2.14,88,0,14.2,8.4
+HS-MUM-003,Mumbai,Maharashtra,Uncertain / Other,19.042,72.858,18.6,314.2,294.8,19.4,0.29,0.38,11,140,40,18,12,4.8,84,27.0,2,0.54,28,0,16.8,6.2
+HS-SUR-001,Surat,Gujarat,Persistent Industrial Heat,21.1702,72.8311,81.4,348.6,297.8,50.8,0.45,0.97,30,355,65,4,6,3.8,76,29.4,26,0.11,0,1,76.8,10.2
+HS-SUR-002,Surat,Gujarat,Routine Gas Flare,21.148,72.86,112.8,358.2,298.6,59.6,0.54,0.89,28,326,42,5,10,4.4,74,29.8,20,0.08,0,1,104.2,15.8
+HS-CHE-001,Chennai,Tamil Nadu,Persistent Industrial Heat,13.0827,80.2707,52.1,338.4,297.2,41.2,0.47,0.92,28,335,68,8,5,4.8,78,31.8,22,0.14,0,1,48.6,7.4
+HS-CHE-002,Chennai,Tamil Nadu,Agricultural Burning,13.15,80.32,14.2,320.8,295.4,25.4,2.86,0.10,4,38,12,8,62,3.6,74,30.4,3,0.92,42,0,6.2,2.8

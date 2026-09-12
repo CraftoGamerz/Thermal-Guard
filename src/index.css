@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════
+   THERMALGUARD — DESIGN TOKENS
+═══════════════════════════════════════════════════════ */
+:root {
+  --font-serif:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:   'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-logo:   'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:   'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+  --ink:         #ffffff;
+  --cyan:        #79dce8;
+  --cyan-logo:   #5fd0e1;
+  --cyan-dim:    rgba(121, 220, 232, 0.18);
+  --amber:       #f5a623;
+  --red-hot:     #ff4d4d;
+  --rule:        rgba(255, 255, 255, 0.20);
+  --btn-ink:     #071227;
+  --bg-deep:     #04101f;
+  --bg-panel:    rgba(9, 21, 42, 0.84);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESET / BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(121, 220, 232, 0.35);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FONTS
+═══════════════════════════════════════════════════════ */
+.font-serif { font-family: var(--font-serif); }
+.font-logo  { font-family: var(--font-logo); }
+
+/* ═══════════════════════════════════════════════════════
+   ENTRANCE ANIMATIONS
+═══════════════════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes revealMask {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes drawRule {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes settleIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes globeRise {
+  from { opacity: 0; transform: scale(0.85) translateY(40px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes atmosphereBloom {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATION UTILITIES
+═══════════════════════════════════════════════════════ */
+.anim-fade-in   { animation: fadeIn 1.2s cubic-bezier(0.4,0,0.2,1) both; }
+.anim-rise-in   { animation: riseIn  0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-settle-in { animation: settleIn 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-draw-rule { animation: drawRule 0.65s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-globe     { animation: globeRise 1.2s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-atmos     { animation: atmosphereBloom 1.8s ease both; }
+
+/* Delay helpers */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-900 { animation-delay: 900ms; }
+.delay-1000{ animation-delay: 1000ms; }
+.delay-1100{ animation-delay: 1100ms; }
+.delay-1200{ animation-delay: 1200ms; }
+.delay-1400{ animation-delay: 1400ms; }
+.delay-1600{ animation-delay: 1600ms; }
+
+/* ═══════════════════════════════════════════════════════
+   HERO TEXT MASK REVEAL
+═══════════════════════════════════════════════════════ */
+.ent-mask {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.15em;
+  margin-top: -0.15em;
+}
+.ent-line {
+  display: block;
+  animation: revealMask 0.95s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLOBE CANVAS WRAPPER
+═══════════════════════════════════════════════════════ */
+.globe-wrapper {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+}
+.globe-wrapper:active {
+  cursor: grabbing;
+}
+.globe-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLASSMORPHISM PANELS
+═══════════════════════════════════════════════════════ */
+.glass {
+  background: var(--bg-panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUTTON STYLES
+═══════════════════════════════════════════════════════ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--btn-ink);
+  background: linear-gradient(180deg, #ffffff 0%, #d6e8f8 4%, #d9ecfe 72%, #ffffff 100%);
+  box-shadow:
+    0 10px 18px -8px rgba(255, 255, 255, 0.50),
+    0 0 26px rgba(255, 255, 255, 0.18),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.25s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: scale(1.04) translateY(-1px);
+  box-shadow:
+    0 16px 28px -10px rgba(255, 255, 255, 0.60),
+    0 0 34px rgba(255, 255, 255, 0.24),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--cyan);
+  border: 1.5px solid rgba(121, 220, 232, 0.45);
+  background: rgba(121, 220, 232, 0.06);
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background: rgba(121, 220, 232, 0.14);
+  border-color: rgba(121, 220, 232, 0.8);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCAN LINE EFFECT (decorative)
+═══════════════════════════════════════════════════════ */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   THERMAL HUD — stat chips
+═══════════════════════════════════════════════════════ */
+.hud-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hud-chip .label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+.hud-chip .value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cyan);
+  font-family: var(--font-logo);
+  line-height: 1;
+}
+.hud-chip .unit {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCROLL INDICATOR
+═══════════════════════════════════════════════════════ */
+.scroll-indicator {
+  animation: pulse-slow 2.5s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FOCUS STYLES
+═══════════════════════════════════════════════════════ */
+*:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   REDUCED MOTION
+═══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPINNER
+═══════════════════════════════════════════════════════ */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
