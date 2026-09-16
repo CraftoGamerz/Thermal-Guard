@@ -1,5 +1,7 @@
 # Application flow
 
+Phase 21 release flow: clean publishing checkout → push verified source commit to `CraftoGamerz/Thermal-Guard` main → run `npm run deploy:pages` → build static Pages variant and publish only `dist/` to that same repository's `gh-pages` branch. The static deployment remains a replay/limited client build; Node, SQLite and live XGBoost stay local/server-side.
+
 Phase 20 cache flow: successful live query → validate and compact the exact-query browser snapshot cache → retain newest entries only within count/byte limits. Offline/fetch failure → restore only the matching saved snapshot and mark it stale with its save time; otherwise show the existing no-snapshot state. Data & methodology → browser cache panel shows local count/size/newest entry → user may explicitly clear only the local ThermalGuard snapshots; clearing cannot touch server records, Firestore, cases, reviews or source data.
 
 Phase 19 retrieval flow: Case Desk → enter words, owner or saved coordinates in Case search → existing status/owner filters and case order apply to the matched saved cards → clear search restores the previous board-filtered set. Each case shows the first unmarked recorded check as a prompt for human work; if all current checks are marked it says only that the record is complete, not that the observation is resolved, safe or current.

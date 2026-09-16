@@ -1,5 +1,7 @@
 # Technical stack
 
+Phase 21 retains `gh-pages` 6.3.0 and updates only its repository destination in `scripts/deploy-pages.mjs` to `https://github.com/CraftoGamerz/Thermal-Guard.git`. Source and Pages deploy branches remain separate; the static build cannot run the Node/Python backend.
+
 Phase 20 retains browser `localStorage` and adds no service worker, cache library, remote cache or telemetry. `offlineCache.js` supplies deterministic validation, count/byte compaction, summary and app-key-only clear operations; pure cache functions are covered by Node tests. It does not cache credentials or user-entered case/contact data.
 
 Phase 19 adds only deterministic client helpers in `caseBoard.js`, tested through Node's built-in `node:test`. Search and next-check guidance use already downloaded case values—no API, persistence, telemetry or cloud query is added.

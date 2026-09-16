@@ -1,5 +1,11 @@
 # ThermalGuard prototype
 
+## Phase 21 — release destination configuration (17 September 2026)
+
+Set the repository-owned GitHub Pages deployment script to publish the compiled static presentation build only to `CraftoGamerz/Thermal-Guard`'s `gh-pages` branch. This does not publish in this step, modify the live Node/NASA backend, expose environment files, or alter source history.
+
+Success: the deployment script contains the repository-owned URL and output text; future manual releases run `npm run deploy:pages` from the clean publishing checkout after a successful source push.
+
 ## Phase 20 — bounded offline cache and release controls (17 September 2026)
 
 Harden the browser snapshot cache for a production-ready release candidate. Retain only valid, exact live-query snapshots; cap browser storage by both entry count and serialized byte budget; evict oldest snapshots deterministically; preserve older valid snapshots if a newly fetched response cannot fit; expose an accessible cache summary and user-initiated clear control in Data & methodology. Cached observations must remain visibly stale/offline, never trigger automatic XGBoost, and never be described as fresh satellite data. Cache controls are local to the current browser, not cloud synchronization.

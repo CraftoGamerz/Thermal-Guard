@@ -1,5 +1,13 @@
 # Implementation plan
 
+## Phase 21 (dependency order)
+
+21.1 Document source/Pages destination and static-build limitation. Done.
+
+21.2 Update the repository-owned Pages deployment destination. Done; depends 21.1.
+
+21.3 Verify the deployment script/build and push a user-authored source commit. Done; depends 21.2.
+
 ## Phase 20 (dependency order)
 
 20.1 Document bounded local cache/recovery and release-control constraints. Done.

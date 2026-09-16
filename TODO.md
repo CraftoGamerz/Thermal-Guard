@@ -1,5 +1,13 @@
 # TODO
 
+## Active phase 21 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 21.1 | done | Documented repository-owned source/Pages destination and static-build limitation. |
+| 21.2 | done | Updated the repository-owned Pages deployment destination. |
+| 21.3 | done | Verified the script/build and pushed a user-authored source commit. |
+
 ## Active phase 20 — 17 September 2026
 
 | Step | Status | Task |

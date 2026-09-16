@@ -5,7 +5,7 @@ await new Promise((resolve, reject) =>
   ghpages.publish(
     "dist",
     {
-      repo: "https://github.com/sankirtansyadavofficial-Hack/Thermal-Guard.git",
+      repo: "https://github.com/CraftoGamerz/Thermal-Guard.git",
       branch: "gh-pages",
       nojekyll: true,
       message: "Deploy ThermalGuard resilient GIS workspace",
@@ -23,4 +23,4 @@ await new Promise((resolve, reject) =>
     (error) => (error ? reject(error) : resolve()),
   ),
 );
-console.log("Published compiled site to sankirtansyadavofficial-Hack/ThermalGuard gh-pages.");
+console.log("Published compiled site to CraftoGamerz/Thermal-Guard gh-pages.");
