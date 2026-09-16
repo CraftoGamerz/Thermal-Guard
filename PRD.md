@@ -1,5 +1,11 @@
 # ThermalGuard prototype
 
+## Phase 23 — Render full-stack deployment (17 September 2026)
+
+Deploy the existing Vite/Node/Python application as one Render Web Service, not a static site. The service must serve the compiled React UI and same-origin `/api` routes, allowing live NASA retrieval and server-side XGBoost rather than the GitHub Pages synthetic replay. A committed Docker runtime supplies Node 24 and Python; `WORKSPACE_TOKEN` remains an uncommitted Render secret and is required for public binding. GitHub Pages remains an explicitly labeled static backup.
+
+Success: the repository contains an inspectable Render Blueprint and reproducible Docker build; the service listens on Render's assigned port and has `/api/health`; no API key, workspace token, SQLite database, analysis artifact, or Firebase secret is committed. Free-tier persistence/sleep limitations are documented rather than hidden. Creating the Render account/service and entering the secret is an account-owner action.
+
 ## Phase 22 — GitHub Pages blank-screen recovery (17 September 2026)
 
 Repair the public GitHub Pages deployment for `CraftoGamerz/Thermal-Guard`. The static build must load its JavaScript and CSS under the repository subpath, deploy from the repository-owned `gh-pages` branch, and show the supported replay/static experience rather than a blank page. Do not claim live Node/NASA/XGBoost backend functions on Pages. Source and deployment commits must use only the user's configured Git identity; no co-author trailers are permitted.

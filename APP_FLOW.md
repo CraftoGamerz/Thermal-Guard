@@ -1,5 +1,11 @@
 # Application flow
 
+## Phase 23 — Render deployment path
+
+`CraftoGamerz/Thermal-Guard` `main` → Render Blueprint detects `render.yaml` → Docker installs Node 24 plus Python/XGBoost and builds `dist/` → Render starts the Node server on `0.0.0.0:$PORT` → browser receives the normal application and calls same-origin `/api/*`. `/api/health` is available without a token for the platform health check; workspace operations prompt for the account-owner's Render `WORKSPACE_TOKEN` through the existing connection dialog. Live NASA/XGBoost errors remain explicit. GitHub Pages continues separately through its static replay branch.
+
+Empty/error edge cases: Render cold-start/loading, NASA/provider failure, missing Python/model dependency, and missing/invalid workspace token use existing visible error states. A free Render restart/deploy loses local SQLite and generated artifacts, so no persisted case/history claim is made for that tier.
+
 Phase 22 deployment recovery flow: source checkout → build the static Pages variant with `/Thermal-Guard/` asset base → publish only `dist/` to `CraftoGamerz/Thermal-Guard` `gh-pages` → GitHub Pages serves `index.html` and its matching versioned static assets. Pages opens the static/replay flow; it does not attempt to expose the local Node/Python services.
 
 Phase 21 release flow: clean publishing checkout → push verified source commit to `CraftoGamerz/Thermal-Guard` main → run `npm run deploy:pages` → build static Pages variant and publish only `dist/` to that same repository's `gh-pages` branch. The static deployment remains a replay/limited client build; Node, SQLite and live XGBoost stay local/server-side.

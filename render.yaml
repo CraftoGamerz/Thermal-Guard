@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: thermal-guard
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: ALLOW_OFFLINE_CACHE
+        value: "false"
+      - key: WORKSPACE_TOKEN
+        sync: false

@@ -96,6 +96,16 @@ No SHA fingerprint is needed for this web app. SHA-1/SHA-256 fingerprints are on
 
 Publish the honest browser-only presentation build with `npm run deploy:pages`. This writes the compiled `dist/` contents to `gh-pages`; source code remains on `main`.
 
+## Deploy the live application on Render
+
+GitHub Pages is intentionally a synthetic replay and cannot run the Node API or Python/XGBoost model. For the live application, deploy this repository as a **Render Web Service** using the included `render.yaml`. Render reads the Dockerfile, builds the normal (non-Pages) Vite application, and runs the API and website together on its generated HTTPS URL.
+
+1. In Render, choose **New → Blueprint** and connect `CraftoGamerz/Thermal-Guard` from the `main` branch.
+2. Render detects `render.yaml`. Before creating the service, set `WORKSPACE_TOKEN` to a new random secret of at least 24 characters. Keep it private; it is entered in the existing in-app **Connection settings** dialog after the site opens.
+3. Create the service and wait for the `/api/health` check to become live. Use the generated `onrender.com` URL as the SIH live link.
+
+The free plan is suitable for a presentation but may sleep after inactivity and has ephemeral local storage. It therefore cannot safely retain SQLite cases or model artifacts across restarts. The live NASA fetch and XGBoost execution work while the service is running; GitHub Pages remains a separate static backup. Optional `FIRMS_MAP_KEY` and Firebase variables can be added as Render environment variables, never committed.
+
 ## Demonstrate
 
 1. Explore Earth, select a pilot district, and enter the workspace as guest or demo manager. In the Node build, show Live feed retrieval and acquisition timestamps; Pages is explicitly replay-only.

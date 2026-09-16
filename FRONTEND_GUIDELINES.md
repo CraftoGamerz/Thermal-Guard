@@ -1,5 +1,9 @@
 # Frontend guidelines
 
+## Phase 23 — hosted mode integrity
+
+The Render build is the standard non-static build: it must retain live/server labels and existing loading, token, provider-error, and model-error states. Do not remove or disguise the workspace-token prompt, NASA provenance, model limitations, or a provider failure merely because the app is hosted. The GitHub Pages static/replay labels apply only to the Pages build.
+
 Phase 22: the Pages build must preserve the same loading/error/replay labels as the local app. No visual feature is added for deployment repair; do not hide static-mode limitations merely to make the hosted experience appear live.
 
 Phase 20: Data & methodology shows “Browser snapshot cache”, count, approximate local size and newest-save time. Describe it as local/offline recovery only; use amber for stale data and neutral controls for clearing. The destructive clear button must say exactly what it clears and be disabled when empty. Do not call cache capacity cloud storage, backup, synchronization, fresh data or a security boundary. Stack summary/actions at 390px.
