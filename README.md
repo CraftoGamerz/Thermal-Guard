@@ -42,7 +42,7 @@ npm run build
 npm start
 ```
 
-The Vite output is `dist/`. The Node server must run for `/api` and live NASA ingestion. The public [GitHub Pages build](https://sankirtansyadavofficial-hack.github.io/ThermalGuard/) uses a visibly labeled synthetic replay with browser-local reviews and watch areas because Pages cannot run Node/SQLite and NASA blocks cross-origin browser downloads.
+The Vite output is `dist/`. The Node server must run for `/api` and live NASA ingestion. The public [GitHub Pages build](https://craftogamerz.github.io/Thermal-Guard/) uses a visibly labeled synthetic replay with browser-local reviews and watch areas because Pages cannot run Node/SQLite and NASA blocks cross-origin browser downloads.
 
 ## Earth explorer and district demo
 
@@ -52,7 +52,7 @@ The landing globe progressively applies the previous index page's Earth day, nig
 
 Select **District manager**, choose Jamnagar, Ahmedabad, Ludhiana or Dhanbad, optionally enter a name and use public PIN **2026**. This is explicitly a simulated session, not real authentication. It preselects an approximate district bounding box and prefills the review name. Refresh restores the session; Sign out clears it. Other geographic filters remain accessible; no district access restrictions are claimed. Hosted reviews are local to the browser, not centrally synchronized.
 
-Source repository: [sankirtansyadavofficial-Hack/ThermalGuard](https://github.com/sankirtansyadavofficial-Hack/ThermalGuard). Source is on `main`; compiled files only are on `gh-pages`.
+Source repository: [CraftoGamerz/Thermal-Guard](https://github.com/CraftoGamerz/Thermal-Guard). Source is on `main`; compiled files only are on `gh-pages`.
 
 ## Implemented
 

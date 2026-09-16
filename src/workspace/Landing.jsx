@@ -331,7 +331,7 @@ export default function Landing({ onEnter, manager }) {
             " Hosted reviews stay in this browser; live NASA ingestion requires the Node API."}
         </p>
         <a
-          href="https://github.com/sankirtansyadavofficial-Hack/ThermalGuard"
+          href="https://github.com/CraftoGamerz/Thermal-Guard"
           target="_blank"
           rel="noreferrer"
         >

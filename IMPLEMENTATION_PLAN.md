@@ -1,5 +1,15 @@
 # Implementation plan
 
+## Phase 22 (dependency order)
+
+22.1 Document Pages blank-screen diagnosis, static limitations and contributor constraint. Done.
+
+22.2 Inspect public branch/page and identify the missing/mismatched deployment artifact. Done; the deployed base was `/ThermalGuard/` but the repository Pages path is `/Thermal-Guard/`.
+
+22.3 Rebuild/publish repository-owned static artifact and verify public asset paths. Done.
+
+22.4 Verify public page load and contributor identity. Done.
+
 ## Phase 21 (dependency order)
 
 21.1 Document source/Pages destination and static-build limitation. Done.

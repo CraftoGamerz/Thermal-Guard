@@ -1,5 +1,7 @@
 # Technical stack
 
+Phase 22 uses the existing Vite Pages build (`--base=/Thermal-Guard/`) and `gh-pages` 6.3.0 publishing only. It validates the deployed branch contents and public static asset paths; it introduces no hosting provider, backend runtime or deployment secret.
+
 Phase 21 retains `gh-pages` 6.3.0 and updates only its repository destination in `scripts/deploy-pages.mjs` to `https://github.com/CraftoGamerz/Thermal-Guard.git`. Source and Pages deploy branches remain separate; the static build cannot run the Node/Python backend.
 
 Phase 20 retains browser `localStorage` and adds no service worker, cache library, remote cache or telemetry. `offlineCache.js` supplies deterministic validation, count/byte compaction, summary and app-key-only clear operations; pure cache functions are covered by Node tests. It does not cache credentials or user-entered case/contact data.

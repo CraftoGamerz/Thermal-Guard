@@ -742,7 +742,7 @@ export default function LandingGuide() {
             NASA FIRMS Area API ↗
           </a>
           <a
-            href="https://github.com/sankirtansyadavofficial-Hack/ThermalGuard"
+            href="https://github.com/CraftoGamerz/Thermal-Guard"
             target="_blank"
             rel="noreferrer"
           >

@@ -1,5 +1,11 @@
 # ThermalGuard prototype
 
+## Phase 22 — GitHub Pages blank-screen recovery (17 September 2026)
+
+Repair the public GitHub Pages deployment for `CraftoGamerz/Thermal-Guard`. The static build must load its JavaScript and CSS under the repository subpath, deploy from the repository-owned `gh-pages` branch, and show the supported replay/static experience rather than a blank page. Do not claim live Node/NASA/XGBoost backend functions on Pages. Source and deployment commits must use only the user's configured Git identity; no co-author trailers are permitted.
+
+Success: remote Pages branch contains `index.html` plus matching base-prefixed assets; direct public request returns an HTML document referencing deployed asset paths; deployed route loads without script-asset 404s; the source repository contributor API still lists only `CraftoGamerz`.
+
 ## Phase 21 — release destination configuration (17 September 2026)
 
 Set the repository-owned GitHub Pages deployment script to publish the compiled static presentation build only to `CraftoGamerz/Thermal-Guard`'s `gh-pages` branch. This does not publish in this step, modify the live Node/NASA backend, expose environment files, or alter source history.

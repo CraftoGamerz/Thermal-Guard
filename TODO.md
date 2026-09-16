@@ -1,5 +1,14 @@
 # TODO
 
+## Active phase 22 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 22.1 | done | Documented Pages blank-screen recovery, static limitations and contributor constraint. |
+| 22.2 | done | Identified deployed `/ThermalGuard/` versus repository `/Thermal-Guard/` asset-path mismatch. |
+| 22.3 | done | Rebuilt/published repository-owned static artifact and verified public asset paths. |
+| 22.4 | done | Verified public rendered content/no browser errors and only `CraftoGamerz` contributor. |
+
 ## Active phase 21 — 17 September 2026
 
 | Step | Status | Task |

@@ -1,5 +1,7 @@
 # Frontend guidelines
 
+Phase 22: the Pages build must preserve the same loading/error/replay labels as the local app. No visual feature is added for deployment repair; do not hide static-mode limitations merely to make the hosted experience appear live.
+
 Phase 20: Data & methodology shows “Browser snapshot cache”, count, approximate local size and newest-save time. Describe it as local/offline recovery only; use amber for stale data and neutral controls for clearing. The destructive clear button must say exactly what it clears and be disabled when empty. Do not call cache capacity cloud storage, backup, synchronization, fresh data or a security boundary. Stack summary/actions at 390px.
 
 Phase 19: use the explicit label “Search saved cases” and include a clear button only while a query is active. Search result copy must say it searches saved record fields, not live satellite data. The next-check cue uses neutral/cyan styling and says “Next recorded check” or “All recorded checks marked”; it must never visually imply case closure, validation, emergency response or safety. Stack finder controls and cue text on mobile.

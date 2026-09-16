@@ -142,7 +142,7 @@ export default function Footer() {
   ]
 
   const socialLinks = [
-    { icon: GithubIcon, label: 'GitHub', href: 'https://github.com/sankirtansyadavofficial-Hack/ThermalGuard' },
+    { icon: GithubIcon, label: 'GitHub', href: 'https://github.com/CraftoGamerz/Thermal-Guard' },
     { icon: LinkedinIcon, label: 'LinkedIn', href: '#' },
     { icon: TwitterIcon, label: 'Twitter', href: '#' },
     { icon: Globe, label: 'Website', href: '#' },

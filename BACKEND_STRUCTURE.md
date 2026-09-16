@@ -1,5 +1,7 @@
 # Backend structure
 
+Phase 22 adds no API, database or server logic. GitHub Pages hosts compiled public files only; static API/replay behavior is the existing client build boundary.
+
 Phase 20 has no server/database change. Browser-only cache records hold only validated public live feed snapshots under the existing ThermalGuard key. Cache summary/clear are client operations; clear removes that one local key and never invokes an API. Cache compaction uses `savedAt`, current query key and serialized byte count; it never changes a feed payload or server-side cache.
 
 Phase 19 adds no persistence, route or server query. `caseSearchText` and `nextRecordedCheck` are client-only projections of existing case fields. They neither patch the checklist nor change activity; a fully marked checklist is a record state only.

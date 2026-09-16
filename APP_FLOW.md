@@ -1,5 +1,7 @@
 # Application flow
 
+Phase 22 deployment recovery flow: source checkout → build the static Pages variant with `/Thermal-Guard/` asset base → publish only `dist/` to `CraftoGamerz/Thermal-Guard` `gh-pages` → GitHub Pages serves `index.html` and its matching versioned static assets. Pages opens the static/replay flow; it does not attempt to expose the local Node/Python services.
+
 Phase 21 release flow: clean publishing checkout → push verified source commit to `CraftoGamerz/Thermal-Guard` main → run `npm run deploy:pages` → build static Pages variant and publish only `dist/` to that same repository's `gh-pages` branch. The static deployment remains a replay/limited client build; Node, SQLite and live XGBoost stay local/server-side.
 
 Phase 20 cache flow: successful live query → validate and compact the exact-query browser snapshot cache → retain newest entries only within count/byte limits. Offline/fetch failure → restore only the matching saved snapshot and mark it stale with its save time; otherwise show the existing no-snapshot state. Data & methodology → browser cache panel shows local count/size/newest entry → user may explicitly clear only the local ThermalGuard snapshots; clearing cannot touch server records, Firestore, cases, reviews or source data.
