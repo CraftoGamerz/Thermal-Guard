@@ -2,7 +2,7 @@
 
 ## Phase 23 — Render container deployment
 
-Render deploys the root `Dockerfile` as a Web Service. The container uses `node:24-bookworm-slim`, Debian Python 3 with `venv`/`pip`, the repository's pinned `analyser/requirements.txt`, and the existing `npm run build` → Node server lifecycle. Render supplies `PORT`; the container binds `HOST=0.0.0.0`. `render.yaml` declares a free Web Service health check at `/api/health`, with `WORKSPACE_TOKEN` supplied only in Render's secret environment. GitHub Pages remains Vite static replay and is not the full-stack target.
+Render deploys the root `Dockerfile` as a Web Service. The container uses `node:24-bookworm-slim`, Debian Python 3 with `venv`/`pip`, the repository's pinned `analyser/requirements.txt`, and the existing `npm run build` → Node server lifecycle. Render supplies `PORT`; the container binds `HOST=0.0.0.0`. `render.yaml` declares a free Web Service health check at `/api/health` and uses Render's `generateValue` to mint `WORKSPACE_TOKEN` once as a private secret. GitHub Pages remains Vite static replay and is not the full-stack target.
 
 Phase 22 uses the existing Vite Pages build (`--base=/Thermal-Guard/`) and `gh-pages` 6.3.0 publishing only. It validates the deployed branch contents and public static asset paths; it introduces no hosting provider, backend runtime or deployment secret.
 

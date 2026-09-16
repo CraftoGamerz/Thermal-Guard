@@ -2,7 +2,7 @@
 
 ## Phase 23 — public runtime boundary
 
-The Render service runs the existing Node process and its same-origin API. `PORT` is platform-assigned, `HOST` is `0.0.0.0`, and the already-public `/api/health` endpoint is the health probe. All other API routes retain token and same-origin enforcement. `WORKSPACE_TOKEN`, optional `FIRMS_MAP_KEY`, Firebase variables, SQLite `data/`, and analysis artifacts are runtime-only; none enter the image source or Git history. SQLite is not persistent on Render free instances, so durable storage needs a later managed database design rather than an unsupported filesystem promise.
+The Render service runs the existing Node process and its same-origin API. `PORT` is platform-assigned, `HOST` is `0.0.0.0`, and the already-public `/api/health` endpoint is the health probe. All other API routes retain token and same-origin enforcement. Render generates `WORKSPACE_TOKEN` once at Blueprint creation; it, optional `FIRMS_MAP_KEY`, Firebase variables, SQLite `data/`, and analysis artifacts are runtime-only and never enter the image source or Git history. SQLite is not persistent on Render free instances, so durable storage needs a later managed database design rather than an unsupported filesystem promise.
 
 Phase 22 adds no API, database or server logic. GitHub Pages hosts compiled public files only; static API/replay behavior is the existing client build boundary.
 

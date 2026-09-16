@@ -7,7 +7,7 @@
 | 23.1 | done | Documented Render full-stack scope, token boundary, free-tier persistence limitation and user-owned account step. |
 | 23.2 | done | Added Docker runtime and Render Blueprint; no secrets are present in source. |
 | 23.3 | done | Native production build, 26 backend tests, lint and configuration review pass; Docker is unavailable locally, so Render will build the image. |
-| 23.4 | blocked | Create the Render service from the account owner’s dashboard, enter its secret and verify the public URL. |
+| 23.4 | blocked | Create the Render service from the account owner’s dashboard; Blueprint generates its token privately, then verify the public URL. |
 
 ## Active phase 22 — 17 September 2026
 

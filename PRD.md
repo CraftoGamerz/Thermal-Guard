@@ -2,9 +2,9 @@
 
 ## Phase 23 — Render full-stack deployment (17 September 2026)
 
-Deploy the existing Vite/Node/Python application as one Render Web Service, not a static site. The service must serve the compiled React UI and same-origin `/api` routes, allowing live NASA retrieval and server-side XGBoost rather than the GitHub Pages synthetic replay. A committed Docker runtime supplies Node 24 and Python; `WORKSPACE_TOKEN` remains an uncommitted Render secret and is required for public binding. GitHub Pages remains an explicitly labeled static backup.
+Deploy the existing Vite/Node/Python application as one Render Web Service, not a static site. The service must serve the compiled React UI and same-origin `/api` routes, allowing live NASA retrieval and server-side XGBoost rather than the GitHub Pages synthetic replay. A committed Docker runtime supplies Node 24 and Python; Render generates `WORKSPACE_TOKEN` as an uncommitted secret during initial Blueprint creation, satisfying the public-binding safeguard. GitHub Pages remains an explicitly labeled static backup.
 
-Success: the repository contains an inspectable Render Blueprint and reproducible Docker build; the service listens on Render's assigned port and has `/api/health`; no API key, workspace token, SQLite database, analysis artifact, or Firebase secret is committed. Free-tier persistence/sleep limitations are documented rather than hidden. Creating the Render account/service and entering the secret is an account-owner action.
+Success: the repository contains an inspectable Render Blueprint and reproducible Docker build; the service listens on Render's assigned port and has `/api/health`; no API key, workspace token, SQLite database, analysis artifact, or Firebase secret is committed. Free-tier persistence/sleep limitations are documented rather than hidden. Creating the Render account/service remains an account-owner action; the generated token can be copied from Render's environment panel only when an analyst needs to connect.
 
 ## Phase 22 — GitHub Pages blank-screen recovery (17 September 2026)
 

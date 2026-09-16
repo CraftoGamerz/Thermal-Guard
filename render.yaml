@@ -10,4 +10,4 @@ services:
       - key: ALLOW_OFFLINE_CACHE
         value: "false"
       - key: WORKSPACE_TOKEN
-        sync: false
+        generateValue: true

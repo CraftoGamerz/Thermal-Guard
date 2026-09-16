@@ -8,7 +8,7 @@
 
 23.3 Validate the production build/tests/configuration and push only the user-identity source commit. Done; native production build, 26 Node tests and lint pass; Docker is not installed on this workstation, so Render will perform the container build. Depends 23.2.
 
-23.4 User connects the repository in Render, enters a 24+-character `WORKSPACE_TOKEN`, and creates the service; verify the generated URL/health endpoint and live server mode. Blocked; depends 23.3 and user-owned Render account access.
+23.4 Render generates a 256-bit `WORKSPACE_TOKEN` during Blueprint creation; user connects the repository and creates the service, then verify the generated URL/health endpoint and live server mode. Blocked; depends 23.3 and user-owned Render account access.
 
 ## Phase 22 (dependency order)
 

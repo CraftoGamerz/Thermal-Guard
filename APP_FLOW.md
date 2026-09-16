@@ -2,7 +2,7 @@
 
 ## Phase 23 — Render deployment path
 
-`CraftoGamerz/Thermal-Guard` `main` → Render Blueprint detects `render.yaml` → Docker installs Node 24 plus Python/XGBoost and builds `dist/` → Render starts the Node server on `0.0.0.0:$PORT` → browser receives the normal application and calls same-origin `/api/*`. `/api/health` is available without a token for the platform health check; workspace operations prompt for the account-owner's Render `WORKSPACE_TOKEN` through the existing connection dialog. Live NASA/XGBoost errors remain explicit. GitHub Pages continues separately through its static replay branch.
+`CraftoGamerz/Thermal-Guard` `main` → Render Blueprint detects `render.yaml` and generates `WORKSPACE_TOKEN` once as a private service secret → Docker installs Node 24 plus Python/XGBoost and builds `dist/` → Render starts the Node server on `0.0.0.0:$PORT` → browser receives the normal application and calls same-origin `/api/*`. `/api/health` is available without a token for the platform health check; workspace operations prompt for the account-owner's token through the existing connection dialog. Live NASA/XGBoost errors remain explicit. GitHub Pages continues separately through its static replay branch.
 
 Empty/error edge cases: Render cold-start/loading, NASA/provider failure, missing Python/model dependency, and missing/invalid workspace token use existing visible error states. A free Render restart/deploy loses local SQLite and generated artifacts, so no persisted case/history claim is made for that tier.
 
