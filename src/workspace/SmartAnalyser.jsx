@@ -6,11 +6,13 @@ import {
   Download,
   FileUp,
   Info,
+  MapPin,
   RefreshCw,
   Search,
 } from "lucide-react";
 import { api, formatUTC, STATIC_DEMO } from "./client";
 import EvidenceDrawer from "./EvidenceDrawer";
+import { locationRank } from "./locationRank";
 import "./real-analyser.css";
 
 const number = (v, digits = 2) =>
@@ -83,7 +85,7 @@ function exportReport(report, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function Scatter({ rows }) {
+function Scatter({ rows, onInspect }) {
   const sample = rows.filter(
     (_, i) => i % Math.max(1, Math.ceil(rows.length / 500)) === 0,
   );
@@ -132,6 +134,16 @@ function Scatter({ rows }) {
             r="3"
             fill={r.unusual ? "#ffb76b" : "#59d8e6"}
             opacity="0.65"
+            role="button"
+            tabIndex="0"
+            aria-label={`Inspect observation ${r.id}: observed ${number(r.observedFrp)} MW, modeled ${number(r.expectedFrp)} MW`}
+            onClick={() => onInspect(r)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onInspect(r);
+              }
+            }}
           >
             <title>{`${r.id}: observed ${number(r.observedFrp)} MW; modeled ${number(r.expectedFrp)} MW`}</title>
           </circle>
@@ -162,6 +174,7 @@ export default function SmartAnalyser({
   days,
   mode,
   onSavedReview,
+  autoAnalysis,
 }) {
   const [input, setInput] = useState("nasa"),
     [file, setFile] = useState(null),
@@ -178,10 +191,29 @@ export default function SmartAnalyser({
   const [evidence, setEvidence] = useState(null),
     [retry, setRetry] = useState(0);
   useEffect(() => {
-    if (detail) document.getElementById("analysis-input-detail")?.scrollIntoView({ block: "nearest", behavior: "instant" });
+    if (detail)
+      document
+        .getElementById("analysis-input-detail")
+        ?.scrollIntoView({ block: "nearest", behavior: "instant" });
   }, [detail]);
   const blocked = STATIC_DEMO || mode === "replay";
-  const busy = submitting || ["running", "queued"].includes(job?.status);
+  const busy =
+    submitting ||
+    ["running", "queued"].includes(job?.status) ||
+    ["running", "queued"].includes(autoAnalysis?.status);
+  useEffect(() => {
+    if (input === "nasa" && autoAnalysis?.result) {
+      // Synchronize the report received from the shared backend job subscription.
+      // eslint-disable-next-line react/set-state-in-effect
+      setReport(autoAnalysis.result);
+      setJob({
+        status: "completed",
+        stage: "Automatic report ready",
+        elapsedMs: autoAnalysis.elapsedMs,
+      });
+      setError("");
+    }
+  }, [autoAnalysis?.result, autoAnalysis?.elapsedMs, input]);
 
   useEffect(() => {
     if (!jobId) return;
@@ -280,7 +312,12 @@ export default function SmartAnalyser({
     report &&
     (report.provenance.training.stale || report.provenance.input.stale);
   const selectedEvent = report?.events.find((e) => e.id === evidence);
-  const statusText = job?.stage || "Ready for a real backend run";
+  const rankedLocations = useMemo(() => locationRank(report), [report]);
+  const statusText =
+    (["running", "queued"].includes(autoAnalysis?.status) &&
+      autoAnalysis.stage) ||
+    job?.stage ||
+    "Ready for a real backend run";
 
   return (
     <div className="real-analyser">
@@ -563,9 +600,54 @@ export default function SmartAnalyser({
             <section className="panel padded">
               <span className="eyebrow">OBSERVED × MODELED</span>
               <h3>Where does the signal diverge?</h3>
-              <Scatter rows={report.rows} />
+              <Scatter rows={report.rows} onInspect={setDetail} />
             </section>
           </div>
+          {!!rankedLocations.length && (
+            <section className="panel padded ra-location-rank">
+              <div className="ra-section-title">
+                <div>
+                  <span className="eyebrow">REPORT-LOCAL REVIEW ORDER</span>
+                  <h3>Which scored locations should be inspected first?</h3>
+                </div>
+                <span className="ra-tag">
+                  <MapPin size={13} /> {rankedLocations.length} locations
+                </span>
+              </div>
+              <p>
+                Attention rank = 70% highest calibrated residual percentile +
+                30% normalized log observed FRP, compared only with locations
+                in this report. It is not a danger score, severity estimate,
+                cause label or cross-area comparison.
+              </p>
+              <div className="ra-location-list">
+                {rankedLocations.slice(0, 8).map((item) => (
+                  <button
+                    type="button"
+                    key={item.eventId}
+                    className="ra-location-item"
+                    onClick={() => setEvidence(item.eventId)}
+                    aria-label={`Inspect attention rank ${item.rank} at ${item.lat.toFixed(4)}, ${item.lon.toFixed(4)}`}
+                  >
+                    <strong>#{item.rank}</strong>
+                    <span>
+                      <b>{item.lat.toFixed(4)}, {item.lon.toFixed(4)}</b>
+                      <small>
+                        {item.detections} scored detection{item.detections === 1 ? "" : "s"} · peak {number(item.maxObservedFrp)} MW
+                      </small>
+                    </span>
+                    <span className={`ra-tag ${item.unusualDetections ? "amber" : ""}`}>
+                      {item.attentionScore} / 100
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <small className="ra-caption">
+                Select a location to open its existing NASA evidence. A score
+                cannot establish an incident or prescribe a response.
+              </small>
+            </section>
+          )}
           <section className="panel padded ra-evidence">
             <div className="ra-section-title">
               <div>

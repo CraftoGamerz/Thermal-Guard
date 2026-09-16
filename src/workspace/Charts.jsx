@@ -20,15 +20,18 @@ export function Sparkline({ values, color = "#c5f277", height = 44 }) {
     </svg>
   );
 }
-export function Timeline({ events }) {
+export function Timeline({ events, onDrill }) {
   const buckets = new Map();
   for (const e of events)
     for (const d of e.detections) {
       const key = d.acquiredAt.slice(0, 13);
-      buckets.set(key, (buckets.get(key) || 0) + 1);
+      const bucket = buckets.get(key) || { count: 0, eventIds: new Set() };
+      bucket.count += 1;
+      bucket.eventIds.add(e.id);
+      buckets.set(key, bucket);
     }
-  const rows = [...buckets].sort(([a], [b]) => a.localeCompare(b)),
-    max = Math.max(1, ...rows.map(([, n]) => n));
+  const rows = [...buckets].sort(([a], [b]) => a.localeCompare(b));
+  const max = Math.max(1, ...rows.map(([, value]) => value.count));
   return (
     <div className="timeline">
       <div
@@ -36,14 +39,26 @@ export function Timeline({ events }) {
         role="img"
         aria-label={`${rows.length} observed hourly buckets. Highest count ${max}.`}
       >
-        {rows.map(([date, count]) => (
-          <div
+        {rows.map(([date, bucket]) => (
+          <button
             key={date}
             className="time-column"
-            title={`${date.replace("T", " ")}:00 UTC: ${count} detections`}
+            aria-label={`Inspect ${date.replace("T", " ")}:00 UTC: ${bucket.count} detections across ${bucket.eventIds.size} events`}
+            title={`${date.replace("T", " ")}:00 UTC: ${bucket.count} detections · select for details`}
+            onClick={() =>
+              onDrill?.({
+                kind: "hour",
+                value: date,
+                label: `${date.replace("T", " ")}:00 UTC`,
+                detectionCount: bucket.count,
+                eventIds: [...bucket.eventIds],
+              })
+            }
           >
-            <span style={{ height: `${Math.max(3, (count / max) * 100)}%` }} />
-          </div>
+            <span
+              style={{ height: `${Math.max(3, (bucket.count / max) * 100)}%` }}
+            />
+          </button>
         ))}
       </div>
       <div className="axis-labels">
@@ -54,13 +69,25 @@ export function Timeline({ events }) {
     </div>
   );
 }
-export function PriorityBars({ events }) {
+export function PriorityBars({ events, onDrill }) {
   return (
     <div className="breakdown">
       {Object.keys(colors).map((p) => {
         const n = events.filter((e) => e.priority === p).length;
         return (
-          <div key={p}>
+          <button
+            key={p}
+            className="priority-bar"
+            onClick={() =>
+              onDrill?.({
+                kind: "priority",
+                value: p,
+                label: `${p} review priority`,
+                eventIds: events.filter((e) => e.priority === p).map((e) => e.id),
+              })
+            }
+            aria-label={`Inspect ${n} ${p} priority events`}
+          >
             <div>
               <span>
                 <i style={{ background: colors[p] }} />
@@ -76,7 +103,7 @@ export function PriorityBars({ events }) {
                 }}
               />
             </div>
-          </div>
+          </button>
         );
       })}
     </div>

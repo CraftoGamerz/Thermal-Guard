@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ThermalGuard uses Firebase Anonymous Auth for a browser-scoped identity.
+    // This is collaboration access, not verified analyst identity.
+    match /workspaces/thermal-guard/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

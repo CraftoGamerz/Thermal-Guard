@@ -2,6 +2,7 @@ import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { randomUUID } from "node:crypto";
+import { createOperationsStore } from "./operations.mjs";
 
 export function createStore(path) {
   if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
@@ -15,6 +16,7 @@ export function createStore(path) {
     CREATE TABLE IF NOT EXISTS analysis_runs(id TEXT PRIMARY KEY,payload TEXT NOT NULL,created_at TEXT NOT NULL);`);
   return {
     db,
+    ...createOperationsStore(db),
     saveRun(run) {
       db.prepare("INSERT OR REPLACE INTO analysis_runs VALUES(?,?,?)").run(
         run.id,
@@ -46,6 +48,11 @@ export function createStore(path) {
       db.exec("BEGIN");
       try {
         for (const e of events) stmt.run(e.id, JSON.stringify(e));
+        this.archive(
+          events
+            .filter((e) => e.id.startsWith("live-"))
+            .flatMap((e) => e.detections),
+        );
         db.exec("COMMIT");
       } catch (e) {
         db.exec("ROLLBACK");

@@ -12,6 +12,7 @@ import {
   ChevronRight,
   CircleHelp,
   Clock3,
+  Columns2,
   Database,
   Flame,
   Focus,
@@ -44,16 +45,45 @@ import EvidenceDrawer from "./EvidenceDrawer";
 import { Timeline, PriorityBars } from "./Charts";
 import { DISTRICTS } from "./districts";
 import SmartAnalyser from "./SmartAnalyser";
+import Operations from "./Operations";
+import useAutoAnalysis from "./useAutoAnalysis";
+import {
+  clearLiveSnapshots,
+  liveCacheSummary,
+  loadLiveSnapshot,
+  saveLiveSnapshot,
+  useNetworkStatus,
+} from "./offlineCache";
 
 const NAV = [
+  { id: "mission", label: "Mission control", icon: Activity },
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "queue", label: "Review queue", icon: ListFilter },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "areas", label: "Watch areas", icon: Bookmark },
   { id: "sources", label: "Data & methodology", icon: Database },
   { id: "analyser", label: "Smart Analyser", icon: BrainCircuit },
+  { id: "resources", label: "Response resources", icon: MapPin },
+  { id: "trends", label: "Activity trends", icon: BarChart3 },
+  { id: "cases", label: "Case desk", icon: ShieldCheck },
 ];
 const TITLES = {
+  mission: [
+    "Understand sooner. Investigate smarter.",
+    "Real observations, automatic screening and a coordinated investigation workflow.",
+  ],
+  resources: [
+    "Response starts with reliable context.",
+    "Mapped infrastructure, source-backed contacts and current weather—without invented details.",
+  ],
+  trends: [
+    "A longer view of thermal activity.",
+    "Compare measured heat over time, with coverage and uncertainty kept visible.",
+  ],
+  cases: [
+    "Every investigation has a next step.",
+    "Track ownership, evidence checks and decisions in one shared prototype workspace.",
+  ],
   overview: [
     "Thermal intelligence, in focus.",
     "Observe satellite signals. Investigate the evidence. Make informed decisions.",
@@ -79,6 +109,12 @@ const TITLES = {
     "Measured NASA observations, genuine XGBoost regression and a transparent evidence trail. No inferred fire causes.",
   ],
 };
+const formatLocalBytes = (value) => {
+  if (!Number.isFinite(value)) return "—";
+  return value < 1024
+    ? `${value} B`
+    : `${(value / 1024).toFixed(value < 10_240 ? 1 : 0)} KB`;
+};
 
 export default function Workspace({ initialArea, manager, onHome, onLogout }) {
   const [tab, setTab] = useState(() =>
@@ -96,7 +132,17 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
     [error, setError] = useState(""),
     [revision, setRevision] = useState(0),
     [health, setHealth] = useState(null);
+  const [snapshotCache, setSnapshotCache] = useState(() => liveCacheSummary());
   const bboxParam = area.bbox.join(",");
+  const online = useNetworkStatus();
+  const autoAnalysis = useAutoAnalysis(feed, {
+    source,
+    days,
+    bbox: area.bbox,
+    mode,
+  });
+  const [investigation, setInvestigation] = useState(null),
+    [opsEvidence, setOpsEvidence] = useState(null);
   const [search, setSearch] = useState(""),
     [priority, setPriority] = useState("All"),
     [confidence, setConfidence] = useState("All"),
@@ -108,7 +154,22 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
     [connection, setConnection] = useState(false),
     [autoRefresh, setAutoRefresh] = useState(true),
     [toast, setToast] = useState("");
+  const [chartDrill, setChartDrill] = useState(null),
+    [focusEventIds, setFocusEventIds] = useState(null);
+  const [comparisonIds, setComparisonIds] = useState([]);
   const refresh = () => setRevision((r) => r + 1);
+  function clearSnapshotCache() {
+    const next = clearLiveSnapshots();
+    setSnapshotCache(next);
+    setToast(
+      next.storageAvailable
+        ? "Local ThermalGuard snapshots cleared. Server and case records were not changed."
+        : "Browser snapshot storage is unavailable in this session.",
+    );
+  }
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [tab]);
   function navigate(id) {
     setTab(id);
     location.hash = id;
@@ -133,20 +194,41 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
   useEffect(() => {
     const controller = new AbortController();
     let current = true;
+    const query = { source, days, bbox: bboxParam.split(",").map(Number) };
     // This effect synchronizes a network request with the current query.
     // eslint-disable-next-line react/set-state-in-effect
     setLoading(true);
     setError("");
     setFeed(null);
     setSelectedId(null);
+    if (mode === "live" && !online) {
+      const snapshot = loadLiveSnapshot(query);
+      if (current) {
+        setFeed(snapshot);
+        setError(
+          snapshot
+            ? ""
+            : "You are offline and this area has no saved live snapshot yet.",
+        );
+        setLoading(false);
+      }
+      return () => {
+        current = false;
+      };
+    }
     const params = new URLSearchParams({ source, days, mode, bbox: bboxParam });
     api("/events?" + params, { signal: controller.signal })
       .then((d) => {
-        if (current) setFeed(d);
+        if (current) {
+          if (mode === "live") setSnapshotCache(saveLiveSnapshot(query, d));
+          setFeed(d);
+        }
       })
       .catch((e) => {
         if (current && e.name !== "AbortError") {
-          setError(e.message);
+          const snapshot = mode === "live" ? loadLiveSnapshot(query) : null;
+          if (snapshot) setFeed(snapshot);
+          else setError(e.message);
           if (e.status === 401) setConnection(true);
         }
       })
@@ -157,12 +239,12 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
       current = false;
       controller.abort();
     };
-  }, [bboxParam, source, days, mode, revision]);
+  }, [bboxParam, source, days, mode, revision, online]);
   useEffect(() => {
-    if (!autoRefresh || mode !== "live" || selectedId) return;
+    if (!autoRefresh || mode !== "live" || selectedId || !online) return;
     const timer = setInterval(refresh, 300000);
     return () => clearInterval(timer);
-  }, [autoRefresh, mode, selectedId]);
+  }, [autoRefresh, mode, selectedId, online]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(""), 4000);
@@ -178,14 +260,22 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
             (review === "unreviewed"
               ? !e.review
               : e.review?.status === review)) &&
+          (!focusEventIds || focusEventIds.includes(e.id)) &&
           e.maxFrp >= Number(minFrp || 0) &&
           `${e.id} ${e.lat.toFixed(3)} ${e.lon.toFixed(3)} ${e.source} ${e.review?.classification || e.classification}`
             .toLowerCase()
             .includes(search.toLowerCase()),
       ),
-    [feed, priority, confidence, review, minFrp, search],
+    [feed, priority, confidence, review, minFrp, search, focusEventIds],
   );
   const selected = feed?.events.find((e) => e.id === selectedId);
+  const comparedEvents = useMemo(
+    () =>
+      comparisonIds
+        .map((id) => feed?.events?.find((event) => event.id === id))
+        .filter(Boolean),
+    [comparisonIds, feed],
+  );
   const countDetections = events.reduce((n, e) => n + e.detections.length, 0),
     elevated = events.filter((e) => e.priority === "Elevated").length,
     reviewed = events.filter((e) => e.review).length;
@@ -198,6 +288,31 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
     setConfidence("All");
     setReview("All");
     setMinFrp("0");
+    setFocusEventIds(null);
+  }
+  function applyChartDrill() {
+    if (!chartDrill) return;
+    setFocusEventIds(chartDrill.eventIds);
+    if (chartDrill.kind === "priority") setPriority(chartDrill.value);
+    if (chartDrill.kind === "confidence") setConfidence(chartDrill.value);
+    setChartDrill(null);
+    navigate("queue");
+  }
+  function inspectChartDrill() {
+    const matching = (feed?.events || []).filter((event) =>
+      chartDrill?.eventIds.includes(event.id),
+    );
+    const strongest = matching.sort((a, b) => b.maxFrp - a.maxFrp)[0];
+    if (strongest) setSelectedId(strongest.id);
+    setChartDrill(null);
+  }
+  function toggleComparison(id) {
+    setComparisonIds((ids) => {
+      if (ids.includes(id)) return ids.filter((item) => item !== id);
+      if (ids.length < 2) return [...ids, id];
+      setToast("Comparison holds two locations; the older selection was replaced.");
+      return [ids.at(-1), id];
+    });
   }
   function saved(id, decision) {
     setFeed((f) => ({
@@ -321,13 +436,15 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
             <span className="small">
               {mode === "replay"
                 ? "Replay scenario"
-                : loading
-                  ? "Connecting to NASA"
-                  : error
-                    ? "Feed unavailable"
-                    : feed?.meta.stale
-                      ? "Cached snapshot"
-                      : "NASA feed connected"}
+                : !online
+                  ? "Offline — local view"
+                  : loading
+                    ? "Connecting to NASA"
+                    : error
+                      ? "Feed unavailable"
+                      : feed?.meta.stale
+                        ? "Cached snapshot"
+                        : "NASA feed connected"}
             </span>
             <button
               className="icon-button"
@@ -620,6 +737,9 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                     <MapView
                       events={events}
                       bbox={area.bbox}
+                      areaName={area.name}
+                      manager={manager}
+                      offline={!online || feed?.meta?.offlineSnapshot}
                       onSelect={(e) => setSelectedId(e.id)}
                       selectedId={selectedId}
                       acquisition={latest}
@@ -701,7 +821,7 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                     </div>
                     <Activity size={18} className="muted" />
                   </div>
-                  <Timeline events={events} />
+                  <Timeline events={events} onDrill={setChartDrill} />
                 </section>
                 <section className="panel">
                   <div className="panel-heading">
@@ -717,17 +837,31 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                       <CircleHelp size={17} />
                     </button>
                   </div>
-                  <PriorityBars events={events} />
+                  <PriorityBars events={events} onDrill={setChartDrill} />
                 </section>
               </div>
             </>
           )}
           {tab === "queue" && (
-            <EventTable
-              events={events}
-              loading={loading}
-              onSelect={(e) => setSelectedId(e.id)}
-            />
+            <>
+              <EventTable
+                events={events}
+                loading={loading}
+                onSelect={(e) => setSelectedId(e.id)}
+                comparisonIds={comparisonIds}
+                onToggleComparison={toggleComparison}
+              />
+              {!!comparedEvents.length && (
+                <EventComparison
+                  events={comparedEvents}
+                  onInspect={(event) => setSelectedId(event.id)}
+                  onRemove={(id) =>
+                    setComparisonIds((ids) => ids.filter((item) => item !== id))
+                  }
+                  onClear={() => setComparisonIds([])}
+                />
+              )}
+            </>
           )}
           {tab === "analytics" && (
             <>
@@ -742,7 +876,7 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                       </p>
                     </div>
                   </div>
-                  <Timeline events={events} />
+                  <Timeline events={events} onDrill={setChartDrill} />
                 </section>
                 <section className="panel">
                   <div className="panel-heading">
@@ -751,7 +885,7 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                       <p>Events per priority category</p>
                     </div>
                   </div>
-                  <PriorityBars events={events} />
+                  <PriorityBars events={events} onDrill={setChartDrill} />
                 </section>
               </div>
               <div className="analysis-cards">
@@ -761,7 +895,22 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                     Reported by the VIIRS product; highest value per event.
                   </p>
                   {["high", "nominal", "low", "unknown"].map((c) => (
-                    <div className="confidence-row" key={c}>
+                    <button
+                      type="button"
+                      className="confidence-row"
+                      key={c}
+                      onClick={() =>
+                        setChartDrill({
+                          kind: "confidence",
+                          value: c,
+                          label: `${c} sensor confidence`,
+                          eventIds: events
+                            .filter((event) => event.confidence === c)
+                            .map((event) => event.id),
+                        })
+                      }
+                      aria-label={`Inspect ${events.filter((event) => event.confidence === c).length} ${c} confidence events`}
+                    >
                       <span className="capitalize">{c}</span>
                       <div className="bar-track">
                         <span
@@ -773,7 +922,7 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
                       <strong>
                         {events.filter((e) => e.confidence === c).length}
                       </strong>
-                    </div>
+                    </button>
                   ))}
                 </section>
                 <section className="panel padded">
@@ -820,6 +969,64 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
               autoRefresh={autoRefresh}
               setAutoRefresh={setAutoRefresh}
               openConnection={() => setConnection(true)}
+              snapshotCache={snapshotCache}
+              clearSnapshotCache={clearSnapshotCache}
+            />
+          )}
+          <section
+            className="auto-analysis-bar"
+            aria-label="Automatic XGBoost status"
+          >
+            <BrainCircuit size={19} />
+            <div>
+              <strong>
+                {autoAnalysis.stage || "Automatic observation screening"}
+              </strong>
+              <small>
+                {autoAnalysis.error ||
+                  "Runs on changed live observations while the workspace is open. No automatic cause confirmation or dispatch."}
+              </small>
+            </div>
+            <label>
+              <input
+                type="checkbox"
+                checked={autoAnalysis.enabled}
+                onChange={(e) => autoAnalysis.setEnabled(e.target.checked)}
+              />
+              Auto XGBoost
+            </label>
+            {autoAnalysis.status === "failed" && (
+              <button className="secondary" onClick={autoAnalysis.retry}>
+                Retry auto analysis
+              </button>
+            )}
+            <button className="text-button" onClick={() => navigate("mission")}>
+              Mission control →
+            </button>
+          </section>
+          {focusEventIds && (
+            <div className="active-drill" role="status">
+              <ListFilter size={15} />
+              <span>
+                Chart drill-down limits this view to {focusEventIds.length} matching event{focusEventIds.length === 1 ? "" : "s"}.
+              </span>
+              <button onClick={() => setFocusEventIds(null)}>Clear chart filter</button>
+            </div>
+          )}
+          {["mission", "resources", "trends", "cases"].includes(tab) && (
+            <Operations
+              page={tab}
+              feed={feed}
+              auto={autoAnalysis}
+              area={area}
+              source={source}
+              mode={mode}
+              manager={manager}
+              focus={investigation}
+              setFocus={setInvestigation}
+              navigate={navigate}
+              onEvidence={setOpsEvidence}
+              feedLoading={loading}
             />
           )}
           {tab === "analyser" && (
@@ -835,6 +1042,7 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
               days={days}
               mode={mode}
               onSavedReview={saved}
+              autoAnalysis={autoAnalysis}
             />
           )}
           <footer className="workspace-footer">
@@ -856,6 +1064,15 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
           </footer>
         </main>
       </div>
+      {opsEvidence && (
+        <EvidenceDrawer
+          key={opsEvidence.id}
+          event={opsEvidence}
+          meta={autoAnalysis.result?.provenance.input || feed?.meta}
+          onClose={() => setOpsEvidence(null)}
+          onSaved={saved}
+        />
+      )}
       {selected && (
         <EvidenceDrawer
           key={selected.id}
@@ -864,6 +1081,39 @@ export default function Workspace({ initialArea, manager, onHome, onLogout }) {
           onClose={() => setSelectedId(null)}
           onSaved={saved}
         />
+      )}
+      {chartDrill && (
+        <section className="chart-inspector" role="dialog" aria-label="Chart drill-down">
+          <button
+            className="chart-inspector-close"
+            onClick={() => setChartDrill(null)}
+            aria-label="Close chart drill-down"
+          >
+            <X size={16} />
+          </button>
+          <span className="eyebrow">CHART DRILL-DOWN</span>
+          <h2>{chartDrill.label}</h2>
+          <p>
+            {chartDrill.detectionCount != null
+              ? `${chartDrill.detectionCount} observed detections across ${chartDrill.eventIds.length} approximate events.`
+              : `${chartDrill.eventIds.length} approximate events in the current selection.`}
+          </p>
+          <small>
+            This is a filter over the observations already displayed. It does not create a new priority, model score or decision.
+          </small>
+          <div>
+            <button className="secondary" onClick={applyChartDrill}>
+              Open matching queue <ArrowRight size={15} />
+            </button>
+            <button
+              className="text-button"
+              disabled={!chartDrill.eventIds.length}
+              onClick={inspectChartDrill}
+            >
+              Inspect strongest event <ArrowUpRight size={15} />
+            </button>
+          </div>
+        </section>
       )}
       {connection && (
         <Connection
@@ -909,7 +1159,13 @@ function Empty({ title, text }) {
     </div>
   );
 }
-function EventTable({ events, loading, onSelect }) {
+function EventTable({
+  events,
+  loading,
+  onSelect,
+  comparisonIds = [],
+  onToggleComparison,
+}) {
   const [page, setPage] = useState(0);
   const size = 20,
     pages = Math.max(1, Math.ceil(events.length / size));
@@ -939,6 +1195,7 @@ function EventTable({ events, loading, onSelect }) {
               <th>Detections</th>
               <th>Priority</th>
               <th>Review state</th>
+              <th>Compare</th>
               <th>Evidence</th>
             </tr>
           </thead>
@@ -968,6 +1225,16 @@ function EventTable({ events, loading, onSelect }) {
                   <span className="review-state">
                     {e.review?.status || "Unreviewed"}
                   </span>
+                </td>
+                <td>
+                  <button
+                    className={`compare-toggle ${comparisonIds.includes(e.id) ? "selected" : ""}`}
+                    aria-pressed={comparisonIds.includes(e.id)}
+                    onClick={() => onToggleComparison?.(e.id)}
+                  >
+                    <Columns2 size={13} />
+                    {comparisonIds.includes(e.id) ? "Added" : "Compare"}
+                  </button>
                 </td>
                 <td>
                   <button className="table-open" onClick={() => onSelect(e)}>
@@ -1000,6 +1267,87 @@ function EventTable({ events, loading, onSelect }) {
             Next
           </button>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function EventComparison({ events, onInspect, onRemove, onClear }) {
+  const [first, second] = events;
+  const delta =
+    first && second ? Math.abs(first.maxFrp - second.maxFrp).toFixed(1) : null;
+  return (
+    <section className="event-comparison panel" aria-label="Selected event comparison">
+      <div className="panel-heading">
+        <div>
+          <span className="eyebrow">MEASURED OBSERVATION COMPARISON</span>
+          <h2>
+            {events.length === 1
+              ? "Choose one more location to compare"
+              : "Two locations, side by side"}
+          </h2>
+          <p>
+            Observed measurements and existing review state only. This does not
+            establish cause, severity, relationship or a response.
+          </p>
+        </div>
+        <button className="text-button" onClick={onClear}>
+          Clear comparison
+        </button>
+      </div>
+      {delta && (
+        <div className="comparison-delta">
+          <span>Peak observed FRP difference</span>
+          <strong>{delta} MW</strong>
+          <small>Absolute difference of each event’s measured peak.</small>
+        </div>
+      )}
+      <div className="comparison-cards">
+        {events.map((event, index) => (
+          <article className="comparison-card" key={event.id}>
+            <div>
+              <span className="comparison-label">LOCATION {index + 1}</span>
+              <button
+                className="comparison-remove"
+                onClick={() => onRemove(event.id)}
+                aria-label={`Remove location ${index + 1} from comparison`}
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <h3>
+              {event.lat.toFixed(4)}° N, {event.lon.toFixed(4)}° E
+            </h3>
+            <dl>
+              <div>
+                <dt>Peak observed FRP</dt>
+                <dd>{event.maxFrp.toFixed(1)} MW</dd>
+              </div>
+              <div>
+                <dt>Detections</dt>
+                <dd>{event.detections.length}</dd>
+              </div>
+              <div>
+                <dt>Observed span</dt>
+                <dd>
+                  {formatUTC(event.firstSeen).replace(" UTC", "")} → {formatUTC(event.lastSeen).replace(" UTC", "")}
+                </dd>
+              </div>
+              <div>
+                <dt>Review state</dt>
+                <dd>{event.review?.status || "Unreviewed"}</dd>
+              </div>
+            </dl>
+            <div className="comparison-actions">
+              <span className="badge" style={{ color: colors[event.priority] }}>
+                {event.priority}
+              </span>
+              <button className="secondary" onClick={() => onInspect(event)}>
+                Inspect evidence <ArrowUpRight size={14} />
+              </button>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -1128,6 +1476,8 @@ function Sources({
   autoRefresh,
   setAutoRefresh,
   openConnection,
+  snapshotCache,
+  clearSnapshotCache,
 }) {
   return (
     <div className="sources-layout">
@@ -1264,6 +1614,37 @@ function Sources({
             </div>
           ))}
         </div>
+      </section>
+      <section className="panel padded browser-cache-panel">
+        <span className="eyebrow">LOCAL RECOVERY</span>
+        <h2>Browser snapshot cache</h2>
+        <p>
+          Keeps recent exact-query live observations in this browser for offline recovery. It is not cloud storage, a backup or fresh satellite data.
+        </p>
+        <dl className="source-facts">
+          <div>
+            <dt>Saved queries</dt>
+            <dd>{snapshotCache.storageAvailable ? `${snapshotCache.entries} / ${snapshotCache.limit}` : "Unavailable"}</dd>
+          </div>
+          <div>
+            <dt>Approx. local size</dt>
+            <dd>{snapshotCache.storageAvailable ? `${formatLocalBytes(snapshotCache.bytes)} / ${formatLocalBytes(snapshotCache.maxBytes)}` : "—"}</dd>
+          </div>
+          <div>
+            <dt>Newest snapshot</dt>
+            <dd>{formatUTC(snapshotCache.newestSavedAt)}</dd>
+          </div>
+        </dl>
+        <small>
+          Offline restoration is always marked stale and never starts automatic analysis.
+        </small>
+        <button
+          className="secondary browser-cache-clear"
+          disabled={!snapshotCache.storageAvailable || !snapshotCache.entries}
+          onClick={clearSnapshotCache}
+        >
+          <Trash2 size={15} /> Clear local ThermalGuard snapshots
+        </button>
       </section>
       <section className="panel padded">
         <h2>What is working today</h2>

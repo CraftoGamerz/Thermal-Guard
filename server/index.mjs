@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { createStore } from "./store.mjs";
 import { createProviders } from "./providers.mjs";
 import { createAnalysis, CSV_LIMIT } from "./analysis.mjs";
+import { createResponseContext, coordinates } from "./operations.mjs";
 import { bboxValue, SOURCES, CLASSES, VERSION, fail } from "./processing.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -56,10 +57,16 @@ export async function createApplication({
   fetcher = fetch,
   dev = false,
   analysisOptions = {},
+  allowOfflineFallback = process.env.ALLOW_OFFLINE_CACHE === "true",
 } = {}) {
   const store = createStore(dbPath),
-    providers = createProviders(store, { mapKey, fetcher });
+    providers = createProviders(store, {
+      mapKey,
+      fetcher,
+      allowOfflineFallback,
+    });
   const analysis = createAnalysis(store, providers, analysisOptions);
+  const responseContext = createResponseContext({ fetcher });
   const vite = dev
     ? await (
         await import("vite")
@@ -110,6 +117,58 @@ export async function createApplication({
         if (rates.size > 1000)
           for (const [key, item] of rates)
             if (now - item.start > 60000) rates.delete(key);
+        if (url.pathname === "/api/response-context" && req.method === "GET") {
+          const [lat, lon] = coordinates(
+            url.searchParams.get("lat"),
+            url.searchParams.get("lon"),
+          );
+          return send(
+            res,
+            200,
+            await responseContext(lat, lon, {
+              force: url.searchParams.get("refresh") === "1",
+            }),
+          );
+        }
+        if (url.pathname === "/api/history" && req.method === "GET")
+          return send(
+            res,
+            200,
+            store.history(
+              url.searchParams.get("source") || "NOAA20",
+              bboxValue(url.searchParams.get("bbox") || undefined),
+              url.searchParams.get("provenance") || "nasa",
+            ),
+          );
+        if (url.pathname === "/api/history/import" && req.method === "POST")
+          return send(
+            res,
+            201,
+            store.importHistory(await body(req, CSV_LIMIT + 200000)),
+          );
+        if (url.pathname === "/api/contacts") {
+          if (req.method === "GET")
+            return send(res, 200, { contacts: store.contacts() });
+          if (req.method === "POST")
+            return send(res, 201, {
+              contact: store.addContact(await body(req)),
+            });
+        }
+        if (url.pathname === "/api/cases") {
+          if (req.method === "GET")
+            return send(res, 200, { cases: store.cases() });
+          if (req.method === "POST") {
+            const b = await body(req);
+            return send(res, 201, {
+              case: store.addCase(b, store.event(String(b.eventId || ""))),
+            });
+          }
+        }
+        const caseMatch = /^\/api\/cases\/([a-f0-9-]{36})$/.exec(url.pathname);
+        if (caseMatch && req.method === "PATCH")
+          return send(res, 200, {
+            case: store.updateCase(caseMatch[1], await body(req)),
+          });
         if (url.pathname === "/api/analysis/jobs" && req.method === "POST")
           return send(
             res,

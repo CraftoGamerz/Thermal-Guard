@@ -28,6 +28,7 @@ export default function EvidenceDrawer({ event, meta, onClose, onSaved }) {
   const [saving, setSaving] = useState(false),
     [message, setMessage] = useState(""),
     [error, setError] = useState("");
+
   useEffect(() => {
     const previous = document.activeElement;
     ref.current?.focus();

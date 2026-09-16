@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -43,14 +44,20 @@ export function validateAnalysis(value) {
 
 export function runPython(payload, { signal, python: pythonOverride } = {}) {
   return new Promise((resolveResult, reject) => {
+    const venvPython = resolve(
+      root,
+      process.platform === "win32"
+        ? ".venv/Scripts/python.exe"
+        : ".venv/bin/python",
+    );
     const python =
-      pythonOverride || process.env.PYTHON_BIN ||
-      resolve(
-        root,
-        process.platform === "win32"
-          ? ".venv/Scripts/python.exe"
-          : ".venv/bin/python",
-      );
+      pythonOverride ||
+      process.env.PYTHON_BIN ||
+      (existsSync(venvPython)
+        ? venvPython
+        : process.platform === "win32"
+          ? "python"
+          : "python3");
     const child = spawn(
       python,
       [resolve(root, "analyser/xgboost_analyser.py")],

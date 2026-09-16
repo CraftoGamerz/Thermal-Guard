@@ -1,5 +1,101 @@
 # TODO
 
+## Active phase 20 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 20.1 | done | Documented bounded local cache, stale recovery and release-control constraints. |
+| 20.2 | done | Added/tested deterministic validation, bounded compaction, summary and app-key-only clear helpers. |
+| 20.3 | done | Added Data & methodology cache status and explicit local clear control. |
+| 20.4 | done | Unit, GIS/cache-control, operations, main/mobile, model and real-analysis workflows plus builds/lint pass. |
+
+## Active phase 19 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 19.1 | done | Documented local search and non-resolution verification-cue constraints. |
+| 19.2 | done | Added and tested saved-field search and next-recorded-check projection. |
+| 19.3 | done | Rendered accessible finder, clear state, result summary and case cue. |
+| 19.4 | done | Combined-filter browser/mobile workflow, lint and builds pass. |
+
+## Active phase 18 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 18.1 | done | Documented saved-evidence return and presentation-only case ordering constraints. |
+| 18.2 | done | Added and tested stable presentation-only ordering from saved case values. |
+| 18.3 | done | Added accessible saved-evidence, current-Mission handoff and case-order controls. |
+| 18.4 | done | Node tests, isolated handoff/mobile workflow, builds and lint pass. |
+
+## Active phase 17 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 17.1 | done | Documented workload-board data basis, status/owner filters and completion limits. |
+| 17.2 | done | Added and tested deterministic status, owner and checklist aggregation. |
+| 17.3 | done | Rendered accessible workload board, filters and per-case verification progress. |
+| 17.4 | done | Node tests, lint, isolated browser/mobile workflow and production builds pass. |
+
+## Active phase 16 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 16.1 | done | Documented Firebase Firestore mirror, anonymous-auth scope, rule requirement and resilient SQLite fallback. |
+| 16.2 | done | Installed Firebase 12.19.0; added lazy modular Firebase client, ignored local config template, project mapping and authenticated Firestore rules. |
+| 16.3 | done | Successful local case saves non-blockingly mirror sanitized case/activity data to Firestore; Case desk has realtime listener, source-labelled remote updates and retry/status states. |
+| 16.4 | done | 20 Node tests, lint, normal/Pages build and live browser fallback pass. Browser reached Firebase but received permission-denied until Firestore/Anonymous Auth/rules are enabled by the project owner. |
+
+## Active phase 15 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 15.1 | done | Documented shared-local case coordination and explicit non-auth/presence limits. |
+| 15.2 | done | Case open/save activity persists an optional validated self-declared editor while safely rendering older actor-less records. |
+| 15.3 | done | Case desk now has a local shared team pulse, owner/open-work summary, manual refresh and page-scoped 30-second refresh. |
+| 15.4 | done | API actor persistence tests, Case desk browser verification, mobile smoke, normal/Pages builds and lint pass; no user case data was created for testing. |
+
+## Active phase 14 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 14.1 | done | Documented local-only two-event evidence comparison and its non-inference limits. |
+| 14.2 | done | Review queue now supports up to two browser-local comparisons, measured delta, remove/clear and direct evidence links with no model/server mutation. |
+| 14.3 | done | Live comparison/evidence/clear flow, browser mobile-overflow smoke, Earth interaction, Pages build and lint pass. |
+
+## Active phase 13 — 17 September 2026
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 13.1 | done | Documented graph drill-down, report-local attention rank and continuous landing-contrast constraints. |
+| 13.2 | done | Acquisition, priority, confidence and scatter controls expose an accessible drill-down with explicit queue/evidence routes. |
+| 13.3 | done | Deterministic client-side report-local location attention rank groups existing NASA events; focused unit and real-analysis browser evidence checks pass. |
+| 13.4 | done | Replaced the full-width linear shadow with continuous local radial contrast and retained sticky Earth/drag/reduced-motion behavior. |
+| 13.5 | done | 19 Node tests, model tests, live XGBoost analysis, workspace/mobile smoke, Earth QA, normal and Pages builds pass. Latest real NASA run: 393 scored NOAA-20 observations; held-out MAE 1.64 MW; 2.60 s total. |
+
+## Active phase 12 — 16 September 2026
+
+Blueprint comparison selects resilient GIS/offline workflow, not unsupported sensor fusion or consequence modelling.
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 12.1 | done | Compared blueprint, recorded selected capabilities and evidence-dependent deferrals. |
+| 12.2 | done | Bounded exact-query local snapshots restore only on a failed/offline live fetch and never start automatic analysis. |
+| 12.3 | done | Leaflet GIS boundary, source-labelled tiles, coordinate copy, selectable distance rings and visible-layer GeoJSON; removed legacy Google key and fabricated emergency directory. |
+| 12.4 | done | Manager boundary, cached and no-snapshot offline states, mobile map layout and static replay navigation pass browser checks. |
+| 12.5 | done | Build/Pages build, lint, 17 Node tests, 5 model tests and full browser/live checks pass. Latest live run: 393 NOAA-20 observations, XGBoost 3.4.1, 3.37 s total. |
+
+## Active phase 11 — 15 September 2026
+
+Actual path `D:/Y-More/AI_Playground/Web/Thermal-Guard`; intake clean HEAD182982c. Preserve newer strict-online policy and installer/deploy changes. No auto publish. See PRD phase11 for 16 functional additions and motion redesign; prior phase10 is history.
+
+| Step | Status | Task |
+| --- | --- | --- |
+| 11.1 | done | Inspected current checkout, documented scope, verified official OSM/Open-Meteo/112 reference sources. |
+| 11.2 | done | History, context, contacts/cases APIs; persistence, validation and HTTP tests pass. |
+| 11.3 | done | Auto-XGBoost, all six hypotheses, cases/contact/history import/export and reload persistence pass isolated browser workflow. Real NASA auto job scored 501 observations with XGBoost 3.4.1. |
+| 11.4 | done | Oversized Earth, hold/drag/release dolly, scroll chapters, navigation/palette and reduced-motion mobile pass browser and visual checks. |
+| 11.5 | done | Regression/static builds, operation/GIS/Earth browser tests, model tests and fresh live NASA/OSM verification pass. |
+
 ## Active phase 10 (12 September 2026)
 
 Actual workspace: `D:/Y-More/AI_Playground/Web/ThermalGuard`. Newer checkout HEAD at intake: 3c22ce6; origin is sankirtansyadavofficial-Hack/ThermalGuard. Preserve this checkout and user history; do not use older task paths/remotes. User confirmed no labeled dataset; implement real-observation scoring, not cause classification.

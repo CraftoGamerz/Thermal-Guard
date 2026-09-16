@@ -68,6 +68,7 @@ export default function Earth({ district, onSelect }) {
   useEffect(() => {
     const el = host.current;
     const hero = el.closest(".earth-hero") || el;
+    const cinematic = hero.classList.contains("earth-story");
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({
@@ -91,6 +92,10 @@ export default function Earth({ district, onSelect }) {
       interacting = false,
       visible = true,
       resumeAt = 0;
+    let held = false,
+      holdY = 0,
+      dolly = 1,
+      dollyTarget = 1;
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
     const hoverTarget = new THREE.Vector2(),
@@ -111,7 +116,21 @@ export default function Earth({ district, onSelect }) {
     renderer.setClearColor(0x000000, 0);
     el.appendChild(renderer.domElement);
     renderer.domElement.setAttribute("aria-hidden", "true");
+    // Let wheel events scroll the document without reaching OrbitControls' zoom
+    // handler; pinch, keyboard and explicit buttons remain available for zoom.
+    const pageWheel = (event) => event.stopImmediatePropagation();
+    if (cinematic)
+      renderer.domElement.addEventListener("wheel", pageWheel, {
+        capture: true,
+        passive: true,
+      });
     const controls = new OrbitControls(camera, renderer.domElement);
+    // The scroll story must never trap page-wheel or one-finger vertical scrolling.
+    if (cinematic) {
+      controls.mouseButtons.MIDDLE = null;
+      controls.touches.ONE = null;
+      controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+    }
     controls.enableDamping = true;
     controls.dampingFactor = 0.075;
     controls.enablePan = false;
@@ -137,6 +156,7 @@ export default function Earth({ district, onSelect }) {
       controls.update();
       controls.enableDamping = true;
       setRotating(false);
+      dollyTarget = 1;
     };
     const motionChanged = () => {
       if (motion.matches) {
@@ -162,7 +182,7 @@ export default function Earth({ district, onSelect }) {
         hoverTarget.set(0, 0);
         return;
       }
-      const bounds = hero.getBoundingClientRect();
+      const bounds = (cinematic ? el : hero).getBoundingClientRect();
       hoverTarget.set(
         THREE.MathUtils.clamp(
           ((event.clientX - bounds.left) / bounds.width - 0.5) * 2,
@@ -379,6 +399,23 @@ export default function Earth({ district, onSelect }) {
     let start;
     const down = (e) => {
       start = [e.clientX, e.clientY];
+      if (cinematic && e.pointerType === "mouse" && e.button === 0) {
+        held = true;
+        holdY = e.clientY;
+        if (!motion.matches && playing) dollyTarget = 0.88;
+      }
+    };
+    const heldMove = (e) => {
+      if (held && !motion.matches && playing)
+        dollyTarget = THREE.MathUtils.clamp(
+          0.88 + ((e.clientY - holdY) / Math.max(400, innerHeight)) * 0.6,
+          0.78,
+          1.16,
+        );
+    };
+    const release = () => {
+      held = false;
+      dollyTarget = 1;
     };
     const up = (e) => {
       if (!start || Math.hypot(e.clientX - start[0], e.clientY - start[1]) > 5)
@@ -396,6 +433,11 @@ export default function Earth({ district, onSelect }) {
     };
     el.addEventListener("pointerdown", down);
     el.addEventListener("pointerup", up);
+    window.addEventListener("pointermove", heldMove, { passive: true });
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+    window.addEventListener("blur", release);
+    if (cinematic) renderer.domElement.style.touchAction = "pan-y";
     engine.current = {
       districtId: "jamnagar",
       focus: (d) => {
@@ -456,6 +498,16 @@ export default function Earth({ district, onSelect }) {
       viewOrbit.setFromVector3(camera.position);
       viewOrbit.theta += hoverOffset.x * 0.16;
       viewOrbit.phi += hoverOffset.y * 0.09;
+      if (cinematic) {
+        const enabled =
+          playing && !motion.matches && hero.dataset.motion !== "off";
+        dolly +=
+          ((enabled ? dollyTarget : 1) - dolly) * (1 - Math.exp(-5 * delta));
+        viewOrbit.radius = Math.max(1.3, viewOrbit.radius * dolly);
+        if (enabled)
+          viewOrbit.theta += Number(hero.dataset.scrollProgress || 0) * 0.32;
+        el.dataset.dolly = dolly.toFixed(3);
+      }
       viewOrbit.makeSafe();
       displayCamera.position.setFromSpherical(viewOrbit);
       displayCamera.lookAt(0, 0, 0);
@@ -485,8 +537,13 @@ export default function Earth({ district, onSelect }) {
       visibility.disconnect();
       resize.disconnect();
       controls.dispose();
+      renderer.domElement.removeEventListener("wheel", pageWheel, true);
       el.removeEventListener("pointerdown", down);
       el.removeEventListener("pointerup", up);
+      window.removeEventListener("pointermove", heldMove);
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
+      window.removeEventListener("blur", release);
       scene.traverse((o) => {
         o.geometry?.dispose();
         if (o.material) {
@@ -512,7 +569,7 @@ export default function Earth({ district, onSelect }) {
         ref={host}
         tabIndex={0}
         role="group"
-        aria-label="Interactive Earth. Move the mouse to explore; drag to rotate, scroll to zoom. Arrow keys rotate; plus and minus zoom. Pause stops ambient motion."
+        aria-label="Interactive Earth. Hold and drag to rotate with cinematic zoom; release to ease back. Scroll moves the page story. Arrow keys rotate; plus and minus zoom. Pause stops ambient motion."
         onKeyDown={(e) => {
           if (e.key.startsWith("Arrow")) {
             e.preventDefault();

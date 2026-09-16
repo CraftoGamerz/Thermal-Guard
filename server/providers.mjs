@@ -9,7 +9,10 @@ import {
   fail,
 } from "./processing.mjs";
 
-export function createProviders(store, { fetcher = fetch, mapKey = "" } = {}) {
+export function createProviders(
+  store,
+  { fetcher = fetch, mapKey = "", allowOfflineFallback = true } = {},
+) {
   const pending = new Map();
   let contextLast = 0;
   async function request(url, options = {}) {
@@ -69,7 +72,7 @@ export function createProviders(store, { fetcher = fetch, mapKey = "" } = {}) {
       let result,
         stale = false,
         warning = null;
-      if (cached && Date.now() - Date.parse(cached.savedAt) < 300000)
+      if (allowOfflineFallback && cached && Date.now() - Date.parse(cached.savedAt) < 300000)
         result = { ...cached, cached: true };
       else {
         try {
@@ -95,9 +98,9 @@ export function createProviders(store, { fetcher = fetch, mapKey = "" } = {}) {
             );
           result = await pending.get(key);
         } catch {
-          if (!cached)
+          if (!allowOfflineFallback || !cached)
             throw fail(
-              "NASA FIRMS is currently unreachable or returned invalid data. Retry, select another sensor, or explicitly use the replay scenario.",
+              "NASA FIRMS is currently unreachable or returned invalid data. Check your internet connection or retry.",
               502,
             );
           result = { ...cached, cached: true };

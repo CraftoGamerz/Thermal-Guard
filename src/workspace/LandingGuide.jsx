@@ -22,6 +22,48 @@ import "./landing-guide.css";
 
 const features = [
   {
+    icon: ScanLine,
+    name: "Screen automatically",
+    sub: "Real XGBoost in the background",
+    detail:
+      "New live observations trigger a real FRP consistency model. Inspect unusual residuals in Mission control; pause or retry screening at any time.",
+  },
+  {
+    icon: Layers3,
+    name: "Investigate six possibilities",
+    sub: "Evidence, not invented certainty",
+    detail:
+      "Industrial fire, flare, process heat, wildfire, crop burning or uncertain. Mapped context and measured history suggest questions; they do not prove a cause.",
+  },
+  {
+    icon: MapPin,
+    name: "Find response resources",
+    sub: "Hydrants, stations & public offices",
+    detail:
+      "Look for mapped hydrant asset IDs, stations, hospitals and public contacts near an observation. Missing numbers remain unknown; verify every resource before use.",
+  },
+  {
+    icon: Radar,
+    name: "Check conditions now",
+    sub: "Open-Meteo weather context",
+    detail:
+      "See current modeled temperature, humidity and wind beside the selected location. These conditions are not observations from the satellite overpass time.",
+  },
+  {
+    icon: ShieldCheck,
+    name: "Give every case an owner",
+    sub: "Assignees, checks & audit trail",
+    detail:
+      "Create an investigation, assign an analyst, track verification checks and notes, and export the case brief. Nothing is dispatched automatically.",
+  },
+  {
+    icon: Activity,
+    name: "Watch the longer pattern",
+    sub: "Historical archive & thermal change",
+    detail:
+      "Accumulate real observations or import separately labeled history. Compare monthly median FRP and observed days. A heat decline is not a measured production decline.",
+  },
+  {
     icon: Globe2,
     name: "Explore the signal",
     sub: "Interactive map & filters",
@@ -124,6 +166,34 @@ const stages = [
 ];
 
 const routes = [
+  {
+    method: "GET",
+    path: "/api/response-context",
+    title: "Find response and weather context",
+    text: "Fetch mapped hydrants, stations, hospitals, public offices and land-use context through Overpass, alongside current Open-Meteo weather. Each provider can fail independently. A 15-minute cache reduces load; refresh=1 requests fresh context. Mapped resources are unverified.",
+    code: "Example: /api/response-context?lat=22.57&lon=88.36\nResponse: { resources, weather, errors, fetchedAt, cached, limitation }",
+  },
+  {
+    method: "GET / POST",
+    path: "/api/history",
+    title: "Compare measured historical activity",
+    text: "GET returns monthly medians, detection counts and observed days for a source and extent. POST /api/history/import validates a historical FIRMS CSV and stores it as user-import, separate from real NASA retrievals and model training.",
+    code: "GET: /api/history?source=NOAA20&bbox=68,6,98,37&provenance=nasa\nPOST /api/history/import: { source, csv }",
+  },
+  {
+    method: "GET / POST / PATCH",
+    path: "/api/cases",
+    title: "Track investigations",
+    text: "Open a case from an existing NASA event; update /api/cases/:id with status, assignee, note and verification checklist. Changes create an activity trail. A case is not a confirmed emergency or an automatic dispatch.",
+    code: "POST: { eventId, assignee? }\nPATCH /:id: { status, assignee, note, checklist }\nGET: { cases }",
+  },
+  {
+    method: "GET / POST",
+    path: "/api/contacts",
+    title: "Save source-backed public contacts",
+    text: "Store a public office contact with coordinates, an HTTPS source, verification date and named verifier. These records are user-attested, not independently verified by ThermalGuard.",
+    code: "POST: { name, role, phone, lat, lon, sourceUrl, verifiedBy, verifiedOn }\nGET: { contacts }",
+  },
   {
     method: "POST / GET",
     path: "/api/analysis/jobs",

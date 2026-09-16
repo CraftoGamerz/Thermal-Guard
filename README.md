@@ -78,8 +78,21 @@ Copy `.env.example` to `.env` if needed. Never commit secrets.
 | `HOST`            | Default 127.0.0.1.                                                                                                                                                                          |
 | `FIRMS_MAP_KEY`   | Optional server-only [NASA FIRMS key](https://firms.modaps.eosdis.nasa.gov/api/map_key/). Enables Area API for 1/2-day requests; 7-day requests use public CSV. Never use a `VITE_` prefix. |
 | `WORKSPACE_TOKEN` | Optional local API bearer token. At least 24 characters required before non-loopback binding. Enter this in Connection settings, not the NASA key.                                          |
+| `VITE_FIREBASE_*` | Optional browser Firebase configuration for the realtime Case desk mirror. Set the six values shown in `.env.example` only in an ignored `.env`/deployment secret environment. Firebase web configuration is public project identity, but Firestore Rules control access. |
 
 External deployment needs an HTTPS reverse proxy and persistent storage for `data/`. A shared workspace token is not individual identity verification or district permissions. Do not expose the default local mode publicly. SQLite uses WAL; back up the database and its WAL consistently before migration.
+
+### Firebase realtime Case desk
+
+Firebase is installed for realtime collaboration, not for NASA data or XGBoost processing. The server keeps NASA observations, model reports and full local cases in SQLite. Firestore mirrors only a compact case summary and activity trail after a successful local save. If Firebase fails, local saving continues and the Case desk explains the status.
+
+Before it can sync, open the `thermalguard-6af94` Firebase project and:
+
+1. Create a **Cloud Firestore** database (production mode is appropriate).
+2. Enable **Authentication → Sign-in method → Anonymous**.
+3. Install Firebase CLI on your own account if needed, sign in, then run `firebase deploy --only firestore:rules` from this project. The included [.firebaserc](.firebaserc) targets your project and [firestore.rules](firestore.rules) requires Firebase-authenticated browsers.
+
+No SHA fingerprint is needed for this web app. SHA-1/SHA-256 fingerprints are only required for Android/native OAuth integrations; do not add one for browser Firestore sync. Analytics is intentionally not initialized, so there is no added tracking/consent surface.
 
 Publish the honest browser-only presentation build with `npm run deploy:pages`. This writes the compiled `dist/` contents to `gh-pages`; source code remains on `main`.
 
@@ -92,6 +105,14 @@ Publish the honest browser-only presentation build with `npm run deploy:pages`. 
 5. Enter an analyst name, decision, classification and rationale. Save and reopen the audit trail.
 6. Export evidence. Use Demo replay explicitly if offline: its fixed 12 September 2026 scenario is synthetic throughout the interface.
 
+## Resilient GIS and offline continuity
+
+The **Overview** map uses Leaflet, not a Google Maps key. Choose street, dark-reference, or dated NASA MODIS imagery when tiles are reachable. It always draws the current watch/manager area boundary and event coordinates; choose a selected event to add a 1, 3, or 5 km **planning-distance** ring. These rings are not plume, evacuation, impact, or dispatch zones. The map can export the visible boundary and events as GeoJSON and copy a clicked coordinate.
+
+After a successful live NASA request, ThermalGuard keeps up to ten bounded browser-local snapshots, keyed to the exact satellite/source/window/area query. If the browser goes offline or a later request fails, it restores only an exact matching snapshot and clearly labels it as stale/local. If no matching snapshot exists, the selected manager boundary remains visible with zero mapped events; no data, tiles, facilities, contacts or current readings are fabricated. Browser storage is not encrypted, synchronized, or a substitute for a formal offline/air-gapped deployment.
+
+The supplied advanced blueprint was compared before implementation. The deliberately deferred items—Sentinel SAR/TROPOMI fusion, gas or plume consequence modelling, asset-vulnerability claims, unmapped-facility detection, trained cause classification/SHAP counterfactuals, and NDMA-grade signed reports—need source access, calibration, ground truth, governance and/or licensing beyond this prototype. XGBoost continues to be real FRP regression, while the six source categories are explicitly unverified evidence hypotheses.
+
 ## Verify
 
 ```powershell
@@ -99,6 +120,8 @@ npm test
 npm run test:model
 npm run lint
 npm run build
+# Isolated manager-area / snapshot / GIS workflow:
+npm run test:gis
 # With npm start running and Chrome installed:
 npm run test:browser
 # Pages checks: first run npm run build:pages, then in another terminal:

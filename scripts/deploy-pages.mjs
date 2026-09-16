@@ -5,10 +5,10 @@ await new Promise((resolve, reject) =>
   ghpages.publish(
     "dist",
     {
-      repo: "https://sankirtansyadavofficial-Hack@github.com/sankirtansyadavofficial-Hack/ThermalGuard.git",
+      repo: "https://github.com/sankirtansyadavofficial-Hack/Thermal-Guard.git",
       branch: "gh-pages",
       nojekyll: true,
-      message: "Deploy ThermalGuard Earth explorer and district workspace",
+      message: "Deploy ThermalGuard resilient GIS workspace",
       beforeAdd: (git) =>
         git.exec(
           "rm",

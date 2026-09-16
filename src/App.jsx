@@ -2,11 +2,11 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import Landing from "./workspace/Landing";
 import { DISTRICTS, restoreManager } from "./workspace/districts";
 import "./workspace/earth.css";
+import CommandPalette from "./workspace/CommandPalette";
+import { DESTINATIONS } from "./workspace/navigation";
 const Workspace = lazy(() => import("./workspace/Workspace"));
 const inWorkspace = () =>
-  ["overview", "queue", "analytics", "areas", "sources", "analyser"].includes(
-    location.hash.slice(1),
-  );
+  DESTINATIONS.some((d) => d.id === location.hash.slice(1));
 export default function App() {
   const [open, setOpen] = useState(inWorkspace),
     [manager, setManager] = useState(restoreManager);
@@ -49,20 +49,25 @@ export default function App() {
     setOpen(false);
     window.scrollTo(0, 0);
   }
-  return open ? (
-    <Suspense
-      fallback={
-        <div className="earth-loading">Opening monitoring workspace…</div>
-      }
-    >
-      <Workspace
-        initialArea={initialArea}
-        manager={manager}
-        onHome={() => home()}
-        onLogout={() => home(true)}
-      />
-    </Suspense>
-  ) : (
-    <Landing onEnter={enter} manager={manager} />
+  return (
+    <>
+      <CommandPalette />
+      {open ? (
+        <Suspense
+          fallback={
+            <div className="earth-loading">Opening monitoring workspace…</div>
+          }
+        >
+          <Workspace
+            initialArea={initialArea}
+            manager={manager}
+            onHome={() => home()}
+            onLogout={() => home(true)}
+          />
+        </Suspense>
+      ) : (
+        <Landing onEnter={enter} manager={manager} />
+      )}
+    </>
   );
 }

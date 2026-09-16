@@ -31,6 +31,11 @@ try {
     .getByText("A measured benchmark, not a confidence claim.")
     .waitFor({ timeout: 60000 });
   assert.ok((await page.locator(".ra-evidence tbody tr").count()) > 0);
+  await page.locator(".ra-location-rank").waitFor({ timeout: 10000 });
+  assert.ok(
+    (await page.locator(".ra-location-item").count()) > 0,
+    "real NASA report exposes one or more report-local locations",
+  );
   await page.screenshot({
     path: ".build/real-analysis-desktop.png",
     fullPage: true,
@@ -49,6 +54,11 @@ try {
     .getByRole("button", { name: "Review evidence", exact: true })
     .first();
   await evidenceButton.click();
+  await page.getByRole("dialog", { name: "Evidence & review" }).waitFor();
+  await page
+    .getByRole("button", { name: "Close evidence", exact: true })
+    .click();
+  await page.locator(".ra-location-item").first().click();
   await page.getByRole("dialog", { name: "Evidence & review" }).waitFor();
   await page
     .getByRole("button", { name: "Close evidence", exact: true })

@@ -8,6 +8,7 @@ test("API ingestion, auth, review persistence, area validation and caching", asy
   const app = await createApplication({
     dbPath: ":memory:",
     token: "test-secret",
+    allowOfflineFallback: true,
     fetcher: async () => {
       requests++;
       return new Response(csv);
